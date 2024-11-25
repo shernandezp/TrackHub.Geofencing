@@ -1,9 +1,13 @@
+using Ardalis.GuardClauses;
 using Common.Application;
 using TrackHub.Manager.Infrastructure.ManagerDB;
 using TrackHub.Manager.Web.GraphQL.Mutation;
 using TrackHub.Manager.Web.GraphQL.Query;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var allowedCORSOrigins = builder.Configuration.GetSection("AllowedCorsOrigins").Get<string>();
+Guard.Against.Null(allowedCORSOrigins, message: $"Allowed Origins configuration for CORS not loaded");
 
 // Add services to the container.
 builder.Services.AddApplicationServices();
@@ -24,7 +28,7 @@ builder.Services
 builder.Services.AddCors(options => options
     .AddPolicy("AllowFrontend",
         builder => builder
-                    .WithOrigins("https://localhost:3000")
+                    .WithOrigins(allowedCORSOrigins)
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials()));
