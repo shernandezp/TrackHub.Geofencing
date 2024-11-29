@@ -43,7 +43,7 @@ public sealed class GeofenceReader(IApplicationDbContext context) : IGeofenceRea
         var points = new List<CoordinateVm>();
         foreach (var coordinate in polygon.Coordinates)
         {
-            points.Add(new CoordinateVm(coordinate.X, coordinate.Y));
+            points.Add(new CoordinateVm(coordinate.Y, coordinate.X));
         }
         return new MultiPolygonVm(points, 4326);
     }
