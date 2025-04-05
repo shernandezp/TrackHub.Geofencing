@@ -18,7 +18,8 @@ using Common.Application.Interfaces;
 namespace TrackHub.Manager.Application.Geofences.Queries.GetByAccount;
 
 [Authorize(Resource = Resources.Geofences, Action = Actions.Read)]
-public readonly record struct GetGeofencesByAccountQuery() : IRequest<IReadOnlyCollection<GeofenceVm>>;
+[Caching]
+public readonly record struct GetGeofencesByAccountQuery(bool EnableCaching) : IRequest<IReadOnlyCollection<GeofenceVm>>;
 
 public class GetGeofencesByAccountQueryHandler(IGeofenceReader reader, IUserReader userReader, IUser user) : IRequestHandler<GetGeofencesByAccountQuery, IReadOnlyCollection<GeofenceVm>>
 {
