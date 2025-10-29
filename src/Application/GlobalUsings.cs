@@ -19,4 +19,4 @@ global using TrackHub.Manager.Domain.Interfaces;
 global using TrackHub.Manager.Domain.Models;
 global using TrackHub.Manager.Domain.Records;
 global using FluentValidation;
-global using MediatR;
+global using Common.Mediator;
