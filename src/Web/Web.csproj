@@ -3,10 +3,6 @@
     <RootNamespace>TrackHub.Manager.Geofencing</RootNamespace>
     <AssemblyName>TrackHub.Manager.Geofencing</AssemblyName>
   </PropertyGroup>
-  <PropertyGroup>
-    <NoWarn>$(NoWarn);AD0001</NoWarn>
-    <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
-  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\Infrastructure\ManagerDB\ManagerDB.csproj" />
@@ -24,6 +20,9 @@
   <ItemGroup>
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
+  <Target Name="CleanBuildHostFolders" AfterTargets="Publish">
+    <RemoveDir Directories="$(PublishDir)BuildHost-net472;$(PublishDir)BuildHost-netcore" />
+  </Target>
   <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
