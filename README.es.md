@@ -1,4 +1,61 @@
-﻿﻿## Componentes y Recursos Utilizados
+﻿﻿# API de Geocercado de TrackHub
+
+## Características Principales
+
+- **Gestión de Datos Geoespaciales**: Crear y gestionar límites geográficos utilizando tipos de datos espaciales PostGIS
+- **Interfaz GraphQL**: Consultas eficientes y flexibles con servidor GraphQL Hot Chocolate
+- **Análisis de Posición en Tiempo Real**: Consultar posiciones de transportadores relativas a geocercas definidas
+- **Arquitectura Limpia**: Arquitectura en capas que asegura mantenibilidad y capacidad de prueba
+- **Acceso por Usuario**: Acceso a datos basado en vistas con filtrado de permisos de usuario
+- **PostgreSQL + PostGIS**: Capacidades de base de datos espacial de nivel empresarial
+
+---
+
+## Inicio Rápido
+
+### Requisitos Previos
+
+- .NET 10.0 SDK
+- PostgreSQL 14+ con extensión PostGIS habilitada
+- TrackHub Authority Server ejecutándose (para autenticación)
+
+### Instalación
+
+1. **Clonar el repositorio**:
+   ```bash
+   git clone https://github.com/shernandezp/TrackHub.Geofencing.git
+   cd TrackHub.Geofencing
+   ```
+
+2. **Habilitar extensión PostGIS** en PostgreSQL:
+   ```sql
+   CREATE EXTENSION postgis;
+   ```
+
+3. **Configurar la conexión a la base de datos** en `appsettings.json`:
+   ```json
+   {
+     "ConnectionStrings": {
+       "ManagerConnection": "Host=localhost;Database=trackhub_manager;Username=postgres;Password=yourpassword"
+     }
+   }
+   ```
+
+4. **Ejecutar las migraciones de la base de datos**:
+   ```bash
+   dotnet ef database update
+   ```
+
+5. **Iniciar la aplicación**:
+   ```bash
+   dotnet run --project src/Web
+   ```
+
+6. **Acceder al Playground GraphQL** en `https://localhost:5001/graphql`
+
+---
+
+## Componentes y Recursos Utilizados
 
 | Componente                | Descripción                                             | Documentación                                                                 |
 |---------------------------|---------------------------------------------------------|-------------------------------------------------------------------------------|
@@ -8,7 +65,7 @@
 
 ---
 
-## API de Geocercado de TrackHub
+## Descripción General
 
 La **API de Geofencing de TrackHub** proporciona servicios para gestionar las características de geocercado de TrackHub. Sigue los principios de la **Arquitectura Limpia** del proyecto, aprovechando **GraphQL** para las interacciones de la API y **Postgres** para la gestión de la base de datos.
 
