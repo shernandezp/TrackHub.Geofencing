@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025 Sergio Hernandez. All rights reserved.
+﻿// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -44,6 +44,8 @@ public static class DependencyInjection
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
         services.AddScoped<IGeofenceWriter, GeofenceWriter>();
         services.AddScoped<IGeofenceReader, GeofenceReader>();
+        services.AddScoped<IGeofenceEventReader, GeofenceEventReader>();
+        services.AddScoped<IGeofenceEventWriter, GeofenceEventWriter>();
         services.AddScoped<IUserReader, UserReader>();
         services.AddScoped<ITransportersInGeofence, TransportersInGeofence>();
 

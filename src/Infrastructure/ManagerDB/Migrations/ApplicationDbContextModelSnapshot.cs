@@ -18,7 +18,7 @@ namespace TrackHub.Manager.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "10.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
@@ -85,6 +85,60 @@ namespace TrackHub.Manager.Infrastructure.Migrations
                     b.ToTable("geofences", "geofencing");
                 });
 
+            modelBuilder.Entity("TrackHub.Manager.Infrastructure.ManagerDB.Entities.GeofenceEvent", b =>
+                {
+                    b.Property<Guid>("GeofenceEventId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("datetime");
+
+                    b.Property<TimeSpan?>("DepartureOffset")
+                        .HasColumnType("interval")
+                        .HasColumnName("departureoffset");
+
+                    b.Property<DateTime?>("DepartureTimestamp")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("departuretimestamp");
+
+                    b.Property<Guid>("GeofenceId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("geofenceid");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("double precision")
+                        .HasColumnName("latitude");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("double precision")
+                        .HasColumnName("longitude");
+
+                    b.Property<TimeSpan>("Offset")
+                        .HasColumnType("interval")
+                        .HasColumnName("offset");
+
+                    b.Property<Guid>("TransporterId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("transporterid");
+
+                    b.HasKey("GeofenceEventId");
+
+                    b.HasIndex("GeofenceId")
+                        .HasDatabaseName("ix_geofenceevent_geofenceid");
+
+                    b.HasIndex("TransporterId")
+                        .HasDatabaseName("ix_geofenceevent_transporterid");
+
+                    b.HasIndex("TransporterId", "GeofenceId", "DepartureTimestamp")
+                        .HasDatabaseName("ix_geofenceevent_open_events")
+                        .HasFilter("departuretimestamp IS NULL");
+
+                    b.ToTable("geofenceevents", "geofencing");
+                });
+
             modelBuilder.Entity("TrackHub.Manager.Infrastructure.ManagerDB.Entities.VwTransporterPosition", b =>
                 {
                     b.Property<Guid>("TransporterId")
@@ -132,6 +186,17 @@ namespace TrackHub.Manager.Infrastructure.Migrations
                     b.ToTable((string)null);
 
                     b.ToView("vw_users", "geofencing");
+                });
+
+            modelBuilder.Entity("TrackHub.Manager.Infrastructure.ManagerDB.Entities.GeofenceEvent", b =>
+                {
+                    b.HasOne("TrackHub.Manager.Infrastructure.ManagerDB.Entities.Geofence", "Geofence")
+                        .WithMany()
+                        .HasForeignKey("GeofenceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Geofence");
                 });
 #pragma warning restore 612, 618
         }

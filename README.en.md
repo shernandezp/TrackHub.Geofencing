@@ -5,6 +5,8 @@
 - **Geospatial Data Management**: Create and manage geographic boundaries using PostGIS spatial data types
 - **GraphQL Interface**: Efficient, flexible querying with Hot Chocolate GraphQL server
 - **Real-Time Position Analysis**: Query transporter positions relative to defined geofences
+- **Geofence Event Detection**: Automatic entry/exit event detection using NetTopologySuite spatial queries
+- **Position Processing**: Bulk position ingestion with real-time geofence containment using PostGIS ST_Contains
 - **Clean Architecture**: Layered architecture ensuring maintainability and testability
 - **User-Scoped Access**: View-based data access with user permission filtering
 - **PostgreSQL + PostGIS**: Enterprise-grade spatial database capabilities
@@ -82,10 +84,22 @@ The API offers the following functionalities:
 ### Geofencing
 
 - **Geofence**: Represents geographical boundaries using Postgres' PostGIS extension to handle spatial data.
+- **GeofenceEvent**: Tracks transporter entry/exit events with timestamps, location, and speed. Events are immutable and consumed by downstream services using cursor-based pagination.
 - **VwUser**: A view of the user table within the geofencing schema, offering a simplified interface for accessing user-related data.
 - **VwTransporterPosition**: A view that combines transporter data with their respective positions in geometry format for easy geospatial queries.
 
 ---
+
+## GraphQL Operations
+
+### Mutations
+
+- **processPositions**: Processes transporter positions to detect geofence entry/exit events using NetTopologySuite's spatial `Contains()` method
+
+### Queries
+
+- **geofenceEventsAfter**: Retrieves events after a given cursor (event ID) for polling by downstream services. Supports cursor-based pagination where each consumer tracks their own position.
+- **transportersInGeofence**: Gets all transporters currently within any geofence
 
 
 ### Why GraphQL?

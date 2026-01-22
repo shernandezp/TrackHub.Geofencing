@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025 Sergio Hernandez. All rights reserved.
+﻿// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ namespace TrackHub.Manager.Infrastructure.ManagerDB.Interfaces;
 public interface IApplicationDbContext
 {
     DbSet<Geofence> Geofences { get; set; }
+    DbSet<GeofenceEvent> GeofenceEvents { get; set; }
     DbSet<VwTransporterPosition> Transporters { get; set; }
     DbSet<VwUser> Users { get; set; }
 

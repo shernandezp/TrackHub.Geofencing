@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025 Sergio Hernandez. All rights reserved.
+﻿// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -19,4 +19,14 @@ public interface IGeofenceReader
 {
     Task<GeofenceVm> GetGeofenceAsync(Guid id, CancellationToken cancellationToken);
     Task<IReadOnlyCollection<GeofenceVm>> GetGeofencesAsync(Guid accountId, CancellationToken cancellationToken);
+    
+    /// <summary>
+    /// Gets the IDs of all active geofences that contain the specified point.
+    /// Uses spatial indexing for efficient lookup.
+    /// </summary>
+    Task<IReadOnlyCollection<Guid>> GetGeofenceIdsContainingPointAsync(
+        Guid accountId,
+        double latitude,
+        double longitude,
+        CancellationToken cancellationToken);
 }
