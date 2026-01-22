@@ -47,7 +47,7 @@ public sealed class GeofenceWriter(IApplicationDbContext context) : IGeofenceWri
 
     public async Task UpdateGeofenceAsync(GeofenceDto geofenceDto, CancellationToken cancellationToken)
     {
-        var geofence = await context.Geofences.FindAsync(geofenceDto.GeofenceId, cancellationToken)
+        var geofence = await context.Geofences.FindAsync([geofenceDto.GeofenceId], cancellationToken)
             ?? throw new NotFoundException(nameof(Geofence), $"{geofenceDto.GeofenceId}");
 
         context.Geofences.Attach(geofence);
@@ -64,7 +64,7 @@ public sealed class GeofenceWriter(IApplicationDbContext context) : IGeofenceWri
 
     public async Task DeleteGeofenceAsync(Guid geofenceId, CancellationToken cancellationToken)
     {
-        var geofence = await context.Geofences.FindAsync(geofenceId, cancellationToken)
+        var geofence = await context.Geofences.FindAsync([geofenceId], cancellationToken)
             ?? throw new NotFoundException(nameof(Geofence), $"{geofenceId}");
 
         context.Geofences.Attach(geofence);

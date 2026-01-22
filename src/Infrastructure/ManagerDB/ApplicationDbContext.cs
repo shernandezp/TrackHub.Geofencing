@@ -20,6 +20,7 @@ namespace TrackHub.Manager.Infrastructure.ManagerDB;
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options), IApplicationDbContext
 {
     public DbSet<Geofence> Geofences { get; set; }
+    public DbSet<GeofenceEvent> GeofenceEvents { get; set; }
     public DbSet<VwTransporterPosition> Transporters { get; set; }
     public DbSet<VwUser> Users { get; set; }
 

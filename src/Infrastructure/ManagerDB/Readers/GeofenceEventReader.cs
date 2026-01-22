@@ -1,0 +1,37 @@
+// Copyright (c) 2025 Sergio Hernandez. All rights reserved.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License").
+//  You may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
+namespace TrackHub.Manager.Infrastructure.ManagerDB.Readers;
+
+public sealed class GeofenceEventReader(IApplicationDbContext context) : IGeofenceEventReader
+{
+    public async Task<IReadOnlyCollection<GeofenceEventVm>> GetOpenEventsForTransporterAsync(
+        Guid transporterId,
+        CancellationToken cancellationToken)
+    {
+        var query = from evt in context.GeofenceEvents
+                    where evt.TransporterId == transporterId && evt.DepartureTimestamp == null
+                    select new GeofenceEventVm(
+                        evt.GeofenceEventId,
+                        evt.TransporterId,
+                        evt.GeofenceId,
+                        new(DateTime.SpecifyKind(evt.DateTime, DateTimeKind.Utc), DateTimeKind.Utc == DateTime.SpecifyKind(evt.DateTime, DateTimeKind.Utc).Kind ? TimeSpan.Zero : evt.Offset),
+                        evt.DepartureTimestamp == null || evt.DepartureOffset == null ? null : new(DateTime.SpecifyKind(evt.DepartureTimestamp.Value, DateTimeKind.Utc), DateTimeKind.Utc == DateTime.SpecifyKind(evt.DepartureTimestamp.Value, DateTimeKind.Utc).Kind ? TimeSpan.Zero : evt.DepartureOffset.Value),
+                        evt.Latitude,
+                        evt.Longitude);
+
+        return await query.ToListAsync(cancellationToken);
+    }
+}

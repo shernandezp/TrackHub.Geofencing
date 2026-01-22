@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025 Sergio Hernandez. All rights reserved.
+// Copyright (c) 2025 Sergio Hernandez. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -13,20 +13,27 @@
 //  limitations under the License.
 //
 
+using TrackHub.Manager.Domain.Records;
+
 namespace TrackHub.Manager.Domain.Interfaces;
 
-public interface IGeofenceReader
+/// <summary>
+/// Interface for writing geofence event data.
+/// </summary>
+public interface IGeofenceEventWriter
 {
-    Task<GeofenceVm> GetGeofenceAsync(Guid id, CancellationToken cancellationToken);
-    Task<IReadOnlyCollection<GeofenceVm>> GetGeofencesAsync(Guid accountId, CancellationToken cancellationToken);
-    
     /// <summary>
-    /// Gets the IDs of all active geofences that contain the specified point.
-    /// Uses spatial indexing for efficient lookup.
+    /// Creates an entry event when a transporter enters a geofence.
     /// </summary>
-    Task<IReadOnlyCollection<Guid>> GetGeofenceIdsContainingPointAsync(
-        Guid accountId,
-        double latitude,
-        double longitude,
+    Task<GeofenceEventVm> CreateEntryEventAsync(
+        GeofenceEventDto geofenceEvent,
+        CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Updates an event with departure information when a transporter exits a geofence.
+    /// </summary>
+    Task UpdateExitEventAsync(
+        Guid geofenceEventId,
+        DateTimeOffset departureTimestamp,
         CancellationToken cancellationToken);
 }

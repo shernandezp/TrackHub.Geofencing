@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using TrackHub.Manager.Infrastructure.ManagerDB;
 namespace TrackHub.Manager.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260121015625_GeofenceEvents")]
+    partial class GeofenceEvents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -92,15 +95,7 @@ namespace TrackHub.Manager.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("datetime");
-
-                    b.Property<TimeSpan?>("DepartureOffset")
-                        .HasColumnType("interval")
-                        .HasColumnName("departureoffset");
-
-                    b.Property<DateTime?>("DepartureTimestamp")
+                    b.Property<DateTimeOffset?>("DepartureTimestamp")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("departuretimestamp");
 
@@ -116,9 +111,9 @@ namespace TrackHub.Manager.Infrastructure.Migrations
                         .HasColumnType("double precision")
                         .HasColumnName("longitude");
 
-                    b.Property<TimeSpan>("Offset")
-                        .HasColumnType("interval")
-                        .HasColumnName("offset");
+                    b.Property<DateTimeOffset>("Timestamp")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("timestamp");
 
                     b.Property<Guid>("TransporterId")
                         .HasColumnType("uuid")

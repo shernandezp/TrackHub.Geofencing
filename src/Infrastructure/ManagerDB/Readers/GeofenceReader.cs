@@ -42,15 +42,34 @@ public sealed class GeofenceReader(IApplicationDbContext context) : IGeofenceRea
             .Where(a => a.AccountId.Equals(accountId))
             .ToListAsync(cancellationToken);
 
-        return geofences.Select(geofence => new GeofenceVm(geofence.GeofenceId,
+        return [.. geofences.Select(geofence => new GeofenceVm(geofence.GeofenceId,
             geofence.AccountId,
             CastGeofence(geofence.Geom),
             geofence.Name,
             geofence.Description,
             geofence.Color,
             geofence.Type,
-            geofence.Active))
-            .ToList();
+            geofence.Active))];
+    }
+
+    public async Task<IReadOnlyCollection<Guid>> GetGeofenceIdsContainingPointAsync(
+        Guid accountId,
+        double latitude,
+        double longitude,
+        CancellationToken cancellationToken)
+    {
+        // Create a point geometry using NetTopologySuite
+        var geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
+        var point = geometryFactory.CreatePoint(new Coordinate(longitude, latitude));
+
+        // Use NTS Contains for spatial query - this translates to PostGIS ST_Contains
+        var geofenceIds = await context.Geofences
+            .Where(g => g.AccountId == accountId && g.Active)
+            .Where(g => g.Geom.Contains(point))
+            .Select(g => g.GeofenceId)
+            .ToListAsync(cancellationToken);
+
+        return geofenceIds;
     }
 
     private static MultiPolygonVm CastGeofence(Polygon polygon)

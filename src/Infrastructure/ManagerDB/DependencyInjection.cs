@@ -44,6 +44,8 @@ public static class DependencyInjection
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
         services.AddScoped<IGeofenceWriter, GeofenceWriter>();
         services.AddScoped<IGeofenceReader, GeofenceReader>();
+        services.AddScoped<IGeofenceEventReader, GeofenceEventReader>();
+        services.AddScoped<IGeofenceEventWriter, GeofenceEventWriter>();
         services.AddScoped<IUserReader, UserReader>();
         services.AddScoped<ITransportersInGeofence, TransportersInGeofence>();
 

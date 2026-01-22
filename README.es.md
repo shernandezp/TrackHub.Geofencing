@@ -5,6 +5,8 @@
 - **Gestión de Datos Geoespaciales**: Crear y gestionar límites geográficos utilizando tipos de datos espaciales PostGIS
 - **Interfaz GraphQL**: Consultas eficientes y flexibles con servidor GraphQL Hot Chocolate
 - **Análisis de Posición en Tiempo Real**: Consultar posiciones de transportadores relativas a geocercas definidas
+- **Detección de Eventos de Geocerca**: Detección automática de eventos de entrada/salida usando consultas espaciales NetTopologySuite
+- **Procesamiento de Posiciones**: Ingesta masiva de posiciones con contención de geocercas en tiempo real usando PostGIS ST_Contains
 - **Arquitectura Limpia**: Arquitectura en capas que asegura mantenibilidad y capacidad de prueba
 - **Acceso por Usuario**: Acceso a datos basado en vistas con filtrado de permisos de usuario
 - **PostgreSQL + PostGIS**: Capacidades de base de datos espacial de nivel empresarial
@@ -82,10 +84,23 @@ La API ofrece las siguientes funcionalidades:
 ### Geofencing
 
 - **Geofence**: Representa las geocercas utilizando la extensión PostGIS de Postgres para manejar datos espaciales.
+- **GeofenceEvent**: Rastrea eventos de entrada/salida de transportadores con marcas de tiempo, ubicación, velocidad y estado de procesamiento para consumo posterior.
 - **VwUser**: Una vista de la tabla de usuarios dentro del esquema de geofencing, que ofrece una interfaz simplificada para acceder a datos relacionados con usuarios.
 - **VwTransporterPosition**: Una vista que combina datos de transportadores con sus respectivas posiciones en formato geométrico para facilitar consultas geoespaciales.
 
 ---
+
+## Operaciones GraphQL
+
+### Mutaciones
+
+- **processPositions**: Procesa posiciones de transportadores para detectar eventos de entrada/salida de geocercas
+- **markGeofenceEventsProcessed**: Marca eventos como procesados después del consumo posterior
+
+### Consultas
+
+- **unprocessedGeofenceEvents**: Recupera eventos no procesados para polling por servicios posteriores
+- **transportersInGeofence**: Obtiene todos los transportadores actualmente dentro de cualquier geocerca
 
 ### ¿Por qué GraphQL?
 

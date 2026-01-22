@@ -13,20 +13,18 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Manager.Domain.Interfaces;
+namespace TrackHub.Manager.Application.GeofenceEvents.Services.Interfaces;
 
-public interface IGeofenceReader
+/// <summary>
+/// Interface for geofence detection service.
+/// </summary>
+public interface IGeofenceDetectionService
 {
-    Task<GeofenceVm> GetGeofenceAsync(Guid id, CancellationToken cancellationToken);
-    Task<IReadOnlyCollection<GeofenceVm>> GetGeofencesAsync(Guid accountId, CancellationToken cancellationToken);
-    
     /// <summary>
-    /// Gets the IDs of all active geofences that contain the specified point.
-    /// Uses spatial indexing for efficient lookup.
+    /// Processes transporter positions to detect geofence entry/exit events.
     /// </summary>
-    Task<IReadOnlyCollection<Guid>> GetGeofenceIdsContainingPointAsync(
+    Task<GeofenceProcessingResultVm> ProcessPositionsAsync(
+        IEnumerable<TransporterPositionDto> positions,
         Guid accountId,
-        double latitude,
-        double longitude,
         CancellationToken cancellationToken);
 }

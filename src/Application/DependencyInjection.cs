@@ -15,6 +15,8 @@
 
 using System.Reflection;
 using Common.Application;
+using TrackHub.Manager.Application.GeofenceEvents.Services;
+using TrackHub.Manager.Application.GeofenceEvents.Services.Interfaces;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -25,6 +27,10 @@ public static class DependencyInjection
         var assembly = Assembly.GetExecutingAssembly();
         services.AddApplicationServices(assembly);
         services.AddDistributedMemoryCache();
+        
+        // Register geofence detection service
+        services.AddScoped<IGeofenceDetectionService, GeofenceDetectionService>();
+        
         return services;
     }
 }

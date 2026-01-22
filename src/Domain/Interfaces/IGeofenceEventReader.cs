@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025 Sergio Hernandez. All rights reserved.
+// Copyright (c) 2025 Sergio Hernandez. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -15,18 +15,13 @@
 
 namespace TrackHub.Manager.Domain.Interfaces;
 
-public interface IGeofenceReader
+/// <summary>
+/// Interface for reading geofence event data.
+/// </summary>
+public interface IGeofenceEventReader
 {
-    Task<GeofenceVm> GetGeofenceAsync(Guid id, CancellationToken cancellationToken);
-    Task<IReadOnlyCollection<GeofenceVm>> GetGeofencesAsync(Guid accountId, CancellationToken cancellationToken);
-    
     /// <summary>
-    /// Gets the IDs of all active geofences that contain the specified point.
-    /// Uses spatial indexing for efficient lookup.
+    /// Gets open (no departure) geofence events for a transporter.
     /// </summary>
-    Task<IReadOnlyCollection<Guid>> GetGeofenceIdsContainingPointAsync(
-        Guid accountId,
-        double latitude,
-        double longitude,
-        CancellationToken cancellationToken);
+    Task<IReadOnlyCollection<GeofenceEventVm>> GetOpenEventsForTransporterAsync(Guid transporterId, CancellationToken cancellationToken);
 }

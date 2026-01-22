@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025 Sergio Hernandez. All rights reserved.
+// Copyright (c) 2025 Sergio Hernandez. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -13,14 +13,16 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Manager.Infrastructure.ManagerDB.Interfaces;
+using TrackHub.Manager.Application.GeofenceEvents.Commands.ProcessPositions;
+using TrackHub.Manager.Domain.Records;
 
-public interface IApplicationDbContext
+namespace TrackHub.Manager.Web.GraphQL.Mutation;
+
+public partial class Mutation
 {
-    DbSet<Geofence> Geofences { get; set; }
-    DbSet<GeofenceEvent> GeofenceEvents { get; set; }
-    DbSet<VwTransporterPosition> Transporters { get; set; }
-    DbSet<VwUser> Users { get; set; }
-
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    /// <summary>
+    /// Processes transporter positions to detect geofence entry/exit events.
+    /// </summary>
+    public async Task<GeofenceProcessingResultVm> ProcessPositions([Service] ISender sender, ProcessPositionsCommand command)
+        => await sender.Send(command);
 }

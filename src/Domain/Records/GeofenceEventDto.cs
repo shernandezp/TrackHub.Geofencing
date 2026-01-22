@@ -13,14 +13,11 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Manager.Infrastructure.ManagerDB.Interfaces;
+namespace TrackHub.Manager.Domain.Records;
 
-public interface IApplicationDbContext
-{
-    DbSet<Geofence> Geofences { get; set; }
-    DbSet<GeofenceEvent> GeofenceEvents { get; set; }
-    DbSet<VwTransporterPosition> Transporters { get; set; }
-    DbSet<VwUser> Users { get; set; }
-
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
-}
+public readonly record struct GeofenceEventDto(
+    Guid TransporterId,
+    Guid GeofenceId,
+    DateTimeOffset EventDateTime,
+    double Latitude,
+    double Longitude);
