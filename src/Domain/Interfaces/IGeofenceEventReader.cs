@@ -24,4 +24,15 @@ public interface IGeofenceEventReader
     /// Gets open (no departure) geofence events for a transporter.
     /// </summary>
     Task<IReadOnlyCollection<GeofenceEventVm>> GetOpenEventsForTransporterAsync(Guid transporterId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets geofence events for reporting, filtered by account, user, date range, and optional transporter.
+    /// </summary>
+    Task<IReadOnlyCollection<GeofenceEventReportVm>> GetGeofenceEventsAsync(
+        Guid accountId,
+        Guid userId,
+        DateTimeOffset fromDate,
+        DateTimeOffset toDate,
+        Guid? transporterId,
+        CancellationToken cancellationToken);
 }
