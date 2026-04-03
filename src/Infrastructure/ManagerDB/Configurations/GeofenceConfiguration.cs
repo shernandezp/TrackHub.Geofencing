@@ -47,5 +47,9 @@ public class GeofenceConfiguration : IEntityTypeConfiguration<Geofence>
             .HasIndex(e => e.Geom)
             .HasDatabaseName("geofence_idx")
             .HasAnnotation("Npgsql:IndexMethod", "gist");
+
+        builder
+            .HasIndex(e => e.AccountId)
+            .HasDatabaseName("ix_geofences_accountid");
     }
 }

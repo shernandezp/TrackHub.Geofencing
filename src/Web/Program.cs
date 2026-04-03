@@ -37,6 +37,8 @@ builder.Services.AddHealthChecks()
 builder.Services
     .AddGraphQLServer()
     .AddAuthorization()
+    .AddMaxExecutionDepthRule(15)
+    .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = builder.Environment.IsDevelopment())
     .AddQueryType<Query>()
     .AddMutationType<Mutation>();
 
