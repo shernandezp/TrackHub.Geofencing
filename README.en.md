@@ -84,7 +84,7 @@ The API offers the following functionalities:
 ### Geofencing
 
 - **Geofence**: Represents geographical boundaries using Postgres' PostGIS extension to handle spatial data.
-- **GeofenceEvent**: Tracks transporter entry/exit events with timestamps, location, and speed. Events are immutable and consumed by downstream services using cursor-based pagination.
+- **GeofenceEvent**: Tracks transporter entry/exit events with timestamps and location. Events are created automatically when positions are processed and a transporter enters or exits a geofence.
 - **VwUser**: A view of the user table within the geofencing schema, offering a simplified interface for accessing user-related data.
 - **VwTransporterPosition**: A view that combines transporter data with their respective positions in geometry format for easy geospatial queries.
 
@@ -100,6 +100,7 @@ The API offers the following functionalities:
 
 - **geofenceEventsAfter**: Retrieves events after a given cursor (event ID) for polling by downstream services. Supports cursor-based pagination where each consumer tracks their own position.
 - **transportersInGeofence**: Gets all transporters currently within any geofence
+- **geofenceEvents**: Retrieves geofence events for reporting, filtered by account, user, date range, and optional transporter. Returns transporter name, geofence name, entry/exit timestamps, total time, and coordinates.
 
 
 ### Why GraphQL?
