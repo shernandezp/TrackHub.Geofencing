@@ -84,7 +84,7 @@ La API ofrece las siguientes funcionalidades:
 ### Geofencing
 
 - **Geofence**: Representa las geocercas utilizando la extensión PostGIS de Postgres para manejar datos espaciales.
-- **GeofenceEvent**: Rastrea eventos de entrada/salida de transportadores con marcas de tiempo, ubicación, velocidad y estado de procesamiento para consumo posterior.
+- **GeofenceEvent**: Rastrea eventos de entrada/salida de transportadores con marcas de tiempo y ubicación. Los eventos se crean automáticamente cuando se procesan posiciones y un transportador entra o sale de una geocerca.
 - **VwUser**: Una vista de la tabla de usuarios dentro del esquema de geofencing, que ofrece una interfaz simplificada para acceder a datos relacionados con usuarios.
 - **VwTransporterPosition**: Una vista que combina datos de transportadores con sus respectivas posiciones en formato geométrico para facilitar consultas geoespaciales.
 
@@ -95,12 +95,12 @@ La API ofrece las siguientes funcionalidades:
 ### Mutaciones
 
 - **processPositions**: Procesa posiciones de transportadores para detectar eventos de entrada/salida de geocercas
-- **markGeofenceEventsProcessed**: Marca eventos como procesados después del consumo posterior
 
 ### Consultas
 
-- **unprocessedGeofenceEvents**: Recupera eventos no procesados para polling por servicios posteriores
+- **geofenceEventsAfter**: Recupera eventos después de un cursor dado (ID de evento) para polling por servicios posteriores. Soporta paginación basada en cursor donde cada consumidor rastrea su propia posición.
 - **transportersInGeofence**: Obtiene todos los transportadores actualmente dentro de cualquier geocerca
+- **geofenceEvents**: Recupera eventos de geocercas para reportes, filtrados por cuenta, usuario, rango de fechas y transportador opcional. Retorna nombre del transportador, nombre de la geocerca, marcas de tiempo de entrada/salida, tiempo total y coordenadas.
 
 ### ¿Por qué GraphQL?
 
