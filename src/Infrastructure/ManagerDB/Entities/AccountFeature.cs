@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
+// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -13,16 +13,14 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Manager.Infrastructure.ManagerDB.Interfaces;
+namespace TrackHub.Manager.Infrastructure.ManagerDB.Entities;
 
-public interface IApplicationDbContext
+public sealed class AccountFeature
 {
-    DbSet<Geofence> Geofences { get; set; }
-    DbSet<GeofenceEvent> GeofenceEvents { get; set; }
-    DbSet<VwTransporterPosition> Transporters { get; set; }
-    DbSet<VwUser> Users { get; set; }
-    DbSet<AccountFeature> AccountFeatures { get; set; }
-    DbSet<AuditEvent> AuditEvents { get; set; }
-
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    public Guid AccountFeatureId { get; set; }
+    public Guid AccountId { get; set; }
+    public string FeatureKey { get; set; } = string.Empty;
+    public bool Enabled { get; set; }
+    public DateTimeOffset? EffectiveFrom { get; set; }
+    public DateTimeOffset? EffectiveTo { get; set; }
 }

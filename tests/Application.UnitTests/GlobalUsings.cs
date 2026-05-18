@@ -15,4 +15,5 @@
 
 global using Moq;
 global using Common.Mediator;
+global using Common.Domain.Constants;
 global using TrackHub.Manager.Domain.Models;

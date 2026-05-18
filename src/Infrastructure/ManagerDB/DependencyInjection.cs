@@ -48,6 +48,7 @@ public static class DependencyInjection
         services.AddScoped<IGeofenceEventWriter, GeofenceEventWriter>();
         services.AddScoped<IUserReader, UserReader>();
         services.AddScoped<ITransportersInGeofence, TransportersInGeofence>();
+        services.AddScoped<IPlatformFeatureReader, PlatformFeatureReader>();
 
         return services;
     }

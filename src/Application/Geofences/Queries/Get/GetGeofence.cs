@@ -20,7 +20,7 @@ namespace TrackHub.Manager.Application.Geofences.Queries.Get;
 [Authorize(Resource = Resources.Geofences, Action = Actions.Read)]
 public readonly record struct GetGeofenceQuery(Guid Id) : IRequest<GeofenceVm>;
 
-public class GetGeofenceQueryHandler(IGeofenceReader reader, IUserReader userReader, IUser user) : IRequestHandler<GetGeofenceQuery, GeofenceVm>
+public class GetGeofenceQueryHandler(IGeofenceReader reader, IUserReader userReader, IUser user, IPlatformFeatureReader platformFeatureReader) : IRequestHandler<GetGeofenceQuery, GeofenceVm>
 {
     private Guid UserId { get; } = user.Id is null ? throw new UnauthorizedAccessException() : new Guid(user.Id);
 
@@ -30,6 +30,7 @@ public class GetGeofenceQueryHandler(IGeofenceReader reader, IUserReader userRea
         var currentUser = await userReader.GetUserAsync(UserId, cancellationToken);
         if (result.AccountId != currentUser.AccountId)
             throw new ForbiddenAccessException();
+        await platformFeatureReader.EnsureFeatureEnabledAsync(currentUser.AccountId, FeatureKeys.Geofencing, cancellationToken);
         return result;
     }
 

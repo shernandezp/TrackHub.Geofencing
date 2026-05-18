@@ -13,13 +13,25 @@
 //  limitations under the License.
 //
 
+using Common.Application.Interfaces;
+
 namespace TrackHub.Manager.Application.Geofences.Commands.Update;
 
 [Authorize(Resource = Resources.Geofences, Action = Actions.Edit)]
 public readonly record struct UpdateGeofenceCommand(GeofenceDto Geofence) : IRequest;
 
-public class UpdateGeofenceCommandHandler(IGeofenceWriter writer) : IRequestHandler<UpdateGeofenceCommand>
+public class UpdateGeofenceCommandHandler(IGeofenceWriter writer, IGeofenceReader reader, IUserReader userReader, IUser user, IPlatformFeatureReader platformFeatureReader) : IRequestHandler<UpdateGeofenceCommand>
 {
+    private Guid UserId { get; } = user.Id is null ? throw new UnauthorizedAccessException() : new Guid(user.Id);
+
     public async Task Handle(UpdateGeofenceCommand request, CancellationToken cancellationToken)
-        => await writer.UpdateGeofenceAsync(request.Geofence, cancellationToken);
+    {
+        var currentGeofence = await reader.GetGeofenceAsync(request.Geofence.GeofenceId, cancellationToken);
+        var currentUser = await userReader.GetUserAsync(UserId, cancellationToken);
+        if (currentGeofence.AccountId != currentUser.AccountId)
+            throw new ForbiddenAccessException();
+
+        await platformFeatureReader.EnsureFeatureEnabledAsync(currentUser.AccountId, FeatureKeys.Geofencing, cancellationToken);
+        await writer.UpdateGeofenceAsync(request.Geofence, cancellationToken);
+    }
 }

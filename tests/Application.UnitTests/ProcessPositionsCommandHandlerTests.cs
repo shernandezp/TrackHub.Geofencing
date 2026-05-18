@@ -1,5 +1,6 @@
 using TrackHub.Manager.Application.GeofenceEvents.Commands.ProcessPositions;
 using TrackHub.Manager.Application.GeofenceEvents.Services.Interfaces;
+using TrackHub.Manager.Domain.Interfaces;
 using TrackHub.Manager.Domain.Records;
 
 namespace TrackHub.Manager.Application.UnitTests.GeofenceEvents.Commands.ProcessPositions;
@@ -8,11 +9,13 @@ namespace TrackHub.Manager.Application.UnitTests.GeofenceEvents.Commands.Process
 public class ProcessPositionsCommandHandlerTests
 {
     private Mock<IGeofenceDetectionService> _detectionServiceMock = null!;
+    private Mock<IPlatformFeatureReader> _featureReaderMock = null!;
 
     [SetUp]
     public void SetUp()
     {
         _detectionServiceMock = new Mock<IGeofenceDetectionService>();
+        _featureReaderMock = new Mock<IPlatformFeatureReader>();
     }
 
     [Test]
@@ -27,8 +30,10 @@ public class ProcessPositionsCommandHandlerTests
         _detectionServiceMock
             .Setup(s => s.ProcessPositionsAsync(It.IsAny<IEnumerable<TransporterPositionDto>>(), accountId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(expected);
+        _featureReaderMock.Setup(r => r.EnsureFeatureEnabledAsync(accountId, FeatureKeys.Geofencing, It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
 
-        var handler = new ProcessPositionsCommandHandler(_detectionServiceMock.Object);
+        var handler = new ProcessPositionsCommandHandler(_detectionServiceMock.Object, _featureReaderMock.Object);
         var command = new ProcessPositionsCommand(accountId, positions);
         var cts = new CancellationTokenSource();
 
@@ -37,6 +42,7 @@ public class ProcessPositionsCommandHandlerTests
 
         // Assert
         Assert.That(result, Is.EqualTo(expected));
+        _featureReaderMock.Verify(r => r.EnsureFeatureEnabledAsync(accountId, FeatureKeys.Geofencing, It.IsAny<CancellationToken>()), Times.Once);
         _detectionServiceMock.Verify(s => s.ProcessPositionsAsync(
             It.Is<IEnumerable<TransporterPositionDto>>(p => p != null && p.SequenceEqual(positions)),
             accountId,

@@ -10,6 +10,7 @@ public class GetTransportersInGeofenceQueryHandlerTests
     private Mock<ITransportersInGeofence> _readerMock = null!;
     private Mock<IUserReader> _userReaderMock = null!;
     private Mock<IUser> _userMock = null!;
+    private Mock<IPlatformFeatureReader> _featureReaderMock = null!;
 
     [SetUp]
     public void SetUp()
@@ -17,6 +18,7 @@ public class GetTransportersInGeofenceQueryHandlerTests
         _readerMock = new Mock<ITransportersInGeofence>();
         _userReaderMock = new Mock<IUserReader>();
         _userMock = new Mock<IUser>();
+        _featureReaderMock = new Mock<IPlatformFeatureReader>();
         _userMock.Setup(u => u.Id).Returns(Guid.NewGuid().ToString());
     }
 
@@ -28,9 +30,11 @@ public class GetTransportersInGeofenceQueryHandlerTests
         var userId = Guid.NewGuid();
         var items = new[] { new TransporterInGeofenceVm(userId, "name", Guid.NewGuid(), "gname") };
         _userReaderMock.Setup(r => r.GetUserAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(new UserVm { UserId = userId, Username = "u", AccountId = accountId });
+        _featureReaderMock.Setup(r => r.EnsureFeatureEnabledAsync(accountId, FeatureKeys.Geofencing, It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
         _readerMock.Setup(r => r.GetTransportersInGeofencesAsync(accountId, It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(items);
 
-        var handler = new GetTransportersInGeofenceQueryHandler(_readerMock.Object, _userReaderMock.Object, _userMock.Object);
+        var handler = new GetTransportersInGeofenceQueryHandler(_readerMock.Object, _userReaderMock.Object, _userMock.Object, _featureReaderMock.Object);
         var query = new GetTransportersInGeofenceQuery();
 
         // Act
@@ -39,6 +43,7 @@ public class GetTransportersInGeofenceQueryHandlerTests
         // Assert
         Assert.That(result, Is.EqualTo(items));
         _userReaderMock.Verify(r => r.GetUserAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
+        _featureReaderMock.Verify(r => r.EnsureFeatureEnabledAsync(accountId, FeatureKeys.Geofencing, It.IsAny<CancellationToken>()), Times.Once);
         _readerMock.Verify(r => r.GetTransportersInGeofencesAsync(accountId, It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -49,6 +54,6 @@ public class GetTransportersInGeofenceQueryHandlerTests
         _userMock.Setup(u => u.Id).Returns(() => null);
 
         // Act & Assert
-        Assert.Throws<UnauthorizedAccessException>(() => new GetTransportersInGeofenceQueryHandler(_readerMock.Object, _userReaderMock.Object, _userMock.Object));
+        Assert.Throws<UnauthorizedAccessException>(() => new GetTransportersInGeofenceQueryHandler(_readerMock.Object, _userReaderMock.Object, _userMock.Object, _featureReaderMock.Object));
     }
 }

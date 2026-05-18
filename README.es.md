@@ -1,4 +1,4 @@
-﻿﻿# API de Geocercado de TrackHub
+# API de Geocercado de TrackHub
 
 ## Características Principales
 
@@ -10,6 +10,15 @@
 - **Arquitectura Limpia**: Arquitectura en capas que asegura mantenibilidad y capacidad de prueba
 - **Acceso por Usuario**: Acceso a datos basado en vistas con filtrado de permisos de usuario
 - **PostgreSQL + PostGIS**: Capacidades de base de datos espacial de nivel empresarial
+
+---
+
+
+## Mejoras de Plataforma Base
+
+- Aplica propiedad por cuenta, visibilidad por grupos y la caracteristica de cuenta `geofencing` antes de exponer datos de geocercas.
+- Publica eventos de geocerca con paginacion estable para que modulos posteriores y reportes puedan consumirlos de forma segura.
+- Reutiliza datos de tenant y visibilidad de transportadores administrados por Manager en lugar de duplicar reglas de autorizacion.
 
 ---
 
@@ -109,3 +118,4 @@ El uso de **GraphQL** permite consultas eficientes y personalizables, permitiend
 ## Licencia
 
 Este proyecto está bajo la Licencia Apache 2.0. Consulta el archivo [LICENSE](https://www.apache.org/licenses/LICENSE-2.0) para más información.
+

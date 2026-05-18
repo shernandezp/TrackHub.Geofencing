@@ -1,4 +1,4 @@
-﻿# TrackHub Geofencing API
+# TrackHub Geofencing API
 
 ## Key Features
 
@@ -10,6 +10,15 @@
 - **Clean Architecture**: Layered architecture ensuring maintainability and testability
 - **User-Scoped Access**: View-based data access with user permission filtering
 - **PostgreSQL + PostGIS**: Enterprise-grade spatial database capabilities
+
+---
+
+
+## Platform Foundation Enhancements
+
+- Enforces account ownership, group visibility, and the `geofencing` account feature before exposing geofence data.
+- Publishes geofence events with stable paging so downstream modules and reports can consume them safely.
+- Reuses Manager-owned tenant and transporter visibility data instead of duplicating authorization rules.
 
 ---
 
@@ -110,3 +119,4 @@ The use of **GraphQL** enables efficient, customizable queries, letting clients 
 ## License
 
 This project is licensed under the Apache 2.0 License. See the [LICENSE file](https://www.apache.org/licenses/LICENSE-2.0) for more information.
+

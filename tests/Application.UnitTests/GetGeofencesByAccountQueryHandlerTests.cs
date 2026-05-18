@@ -10,6 +10,7 @@ public class GetGeofencesByAccountQueryHandlerTests
     private Mock<IGeofenceReader> _readerMock = null!;
     private Mock<IUserReader> _userReaderMock = null!;
     private Mock<IUser> _userMock = null!;
+    private Mock<IPlatformFeatureReader> _featureReaderMock = null!;
 
     [SetUp]
     public void SetUp()
@@ -17,6 +18,7 @@ public class GetGeofencesByAccountQueryHandlerTests
         _readerMock = new Mock<IGeofenceReader>();
         _userReaderMock = new Mock<IUserReader>();
         _userMock = new Mock<IUser>();
+        _featureReaderMock = new Mock<IPlatformFeatureReader>();
         _userMock.Setup(u => u.Id).Returns(Guid.NewGuid().ToString());
     }
 
@@ -27,9 +29,11 @@ public class GetGeofencesByAccountQueryHandlerTests
         var accountId = Guid.NewGuid();
         var geofences = new[] { new GeofenceVm(Guid.NewGuid(), accountId, new MultiPolygonVm([], 4326), "name", null, 1, 1, true) };
         _userReaderMock.Setup(r => r.GetUserAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(new UserVm { AccountId = accountId });
+        _featureReaderMock.Setup(r => r.EnsureFeatureEnabledAsync(accountId, FeatureKeys.Geofencing, It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
         _readerMock.Setup(r => r.GetGeofencesAsync(accountId, It.IsAny<CancellationToken>())).ReturnsAsync(geofences);
 
-        var handler = new GetGeofencesByAccountQueryHandler(_readerMock.Object, _userReaderMock.Object, _userMock.Object);
+        var handler = new GetGeofencesByAccountQueryHandler(_readerMock.Object, _userReaderMock.Object, _userMock.Object, _featureReaderMock.Object);
         var query = new GetGeofencesByAccountQuery(true);
 
         // Act
@@ -38,6 +42,7 @@ public class GetGeofencesByAccountQueryHandlerTests
         // Assert
         Assert.That(result, Is.EqualTo(geofences));
         _userReaderMock.Verify(r => r.GetUserAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
+        _featureReaderMock.Verify(r => r.EnsureFeatureEnabledAsync(accountId, FeatureKeys.Geofencing, It.IsAny<CancellationToken>()), Times.Once);
         _readerMock.Verify(r => r.GetGeofencesAsync(accountId, It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -48,6 +53,6 @@ public class GetGeofencesByAccountQueryHandlerTests
         _userMock.Setup(u => u.Id).Returns(() => null);
 
         // Act & Assert
-        Assert.Throws<UnauthorizedAccessException>(() => new GetGeofencesByAccountQueryHandler(_readerMock.Object, _userReaderMock.Object, _userMock.Object));
+        Assert.Throws<UnauthorizedAccessException>(() => new GetGeofencesByAccountQueryHandler(_readerMock.Object, _userReaderMock.Object, _userMock.Object, _featureReaderMock.Object));
     }
 }
