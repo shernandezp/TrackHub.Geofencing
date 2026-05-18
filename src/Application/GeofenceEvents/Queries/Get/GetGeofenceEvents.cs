@@ -23,7 +23,7 @@ public readonly record struct GetGeofenceEventsQuery(
     DateTimeOffset To,
     Guid? TransporterId) : IRequest<IReadOnlyCollection<GeofenceEventReportVm>>;
 
-public class GetGeofenceEventsQueryHandler(IGeofenceEventReader reader, IUserReader userReader, IUser user)
+public class GetGeofenceEventsQueryHandler(IGeofenceEventReader reader, IUserReader userReader, IUser user, IAccountFeatureReader accountFeatureReader)
     : IRequestHandler<GetGeofenceEventsQuery, IReadOnlyCollection<GeofenceEventReportVm>>
 {
     private Guid UserId { get; } = user.Id is null ? throw new UnauthorizedAccessException() : new Guid(user.Id);
@@ -31,7 +31,9 @@ public class GetGeofenceEventsQueryHandler(IGeofenceEventReader reader, IUserRea
     public async Task<IReadOnlyCollection<GeofenceEventReportVm>> Handle(GetGeofenceEventsQuery request, CancellationToken cancellationToken)
     {
         var userData = await userReader.GetUserAsync(UserId, cancellationToken);
+        await accountFeatureReader.EnsureFeatureEnabledAsync(userData.AccountId, FeatureKeys.Geofencing, cancellationToken);
         return await reader.GetGeofenceEventsAsync(
             userData.AccountId, UserId, request.From, request.To, request.TransporterId, cancellationToken);
     }
 }
+

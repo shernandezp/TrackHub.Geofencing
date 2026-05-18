@@ -1,5 +1,7 @@
 using TrackHub.Manager.Application.Geofences.Commands.Delete;
 using TrackHub.Manager.Domain.Interfaces;
+using Common.Application.Exceptions;
+using Common.Application.Interfaces;
 
 namespace TrackHub.Manager.Application.UnitTests.Geofences.Commands.Delete;
 
@@ -7,11 +9,28 @@ namespace TrackHub.Manager.Application.UnitTests.Geofences.Commands.Delete;
 public class DeleteGeofenceCommandHandlerTests
 {
     private Mock<IGeofenceWriter> _writerMock = null!;
+    private Mock<IGeofenceReader> _readerMock = null!;
+    private Mock<IUserReader> _userReaderMock = null!;
+    private Mock<IUser> _userMock = null!;
+    private Mock<IAccountFeatureReader> _featureReaderMock = null!;
+    private Guid _userId;
+    private Guid _accountId;
 
     [SetUp]
     public void SetUp()
     {
         _writerMock = new Mock<IGeofenceWriter>();
+        _readerMock = new Mock<IGeofenceReader>();
+        _userReaderMock = new Mock<IUserReader>();
+        _userMock = new Mock<IUser>();
+        _featureReaderMock = new Mock<IAccountFeatureReader>();
+        _userId = Guid.NewGuid();
+        _accountId = Guid.NewGuid();
+        _userMock.Setup(u => u.Id).Returns(_userId.ToString());
+        _userReaderMock.Setup(r => r.GetUserAsync(_userId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new UserVm(_userId, "testuser", _accountId));
+        _featureReaderMock.Setup(r => r.EnsureFeatureEnabledAsync(_accountId, FeatureKeys.Geofencing, It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
     }
 
     [Test]
@@ -19,15 +38,32 @@ public class DeleteGeofenceCommandHandlerTests
     {
         // Arrange
         var id = Guid.NewGuid();
+        _readerMock.Setup(r => r.GetGeofenceAsync(id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new GeofenceVm(id, _accountId, default!, "existing", null, 1, 1, true));
         _writerMock.Setup(w => w.DeleteGeofenceAsync(id, It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
-        var handler = new DeleteGeofenceCommandHandler(_writerMock.Object);
+        var handler = new DeleteGeofenceCommandHandler(_writerMock.Object, _readerMock.Object, _userReaderMock.Object, _userMock.Object, _featureReaderMock.Object);
         var command = new DeleteGeofenceCommand(id);
 
         // Act
         await handler.Handle(command, CancellationToken.None);
 
         // Assert
+        _featureReaderMock.Verify(r => r.EnsureFeatureEnabledAsync(_accountId, FeatureKeys.Geofencing, It.IsAny<CancellationToken>()), Times.Once);
         _writerMock.Verify(w => w.DeleteGeofenceAsync(id, It.IsAny<CancellationToken>()), Times.Once);
     }
+
+    [Test]
+    public void Handle_ShouldThrowForbiddenAccessException_WhenAccountDoesNotMatch()
+    {
+        var id = Guid.NewGuid();
+        _readerMock.Setup(r => r.GetGeofenceAsync(id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new GeofenceVm(id, Guid.NewGuid(), default!, "existing", null, 1, 1, true));
+
+        var handler = new DeleteGeofenceCommandHandler(_writerMock.Object, _readerMock.Object, _userReaderMock.Object, _userMock.Object, _featureReaderMock.Object);
+
+        Assert.ThrowsAsync<ForbiddenAccessException>(() => handler.Handle(new DeleteGeofenceCommand(id), CancellationToken.None));
+        _writerMock.Verify(w => w.DeleteGeofenceAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
 }
+

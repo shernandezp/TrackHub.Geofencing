@@ -13,10 +13,14 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Manager.Domain.Interfaces;
+namespace TrackHub.Manager.Infrastructure.ManagerDB.Entities;
 
-public interface IUserReader
+public sealed class AccountFeature
 {
-    Task<UserVm> GetUserAsync(Guid id, CancellationToken cancellationToken);
+    public Guid AccountFeatureId { get; set; }
+    public Guid AccountId { get; set; }
+    public string FeatureKey { get; set; } = string.Empty;
+    public bool Enabled { get; set; }
+    public DateTimeOffset? EffectiveFrom { get; set; }
+    public DateTimeOffset? EffectiveTo { get; set; }
 }
-

@@ -21,6 +21,8 @@ using TrackHub.Manager.Web.GraphQL.Query;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddTrackHubSerilog();
+
 var allowedCORSOrigins = builder.Configuration.GetSection("AllowedCorsOrigins").Get<string>();
 Guard.Against.Null(allowedCORSOrigins, message: $"Allowed Origins configuration for CORS not loaded");
 

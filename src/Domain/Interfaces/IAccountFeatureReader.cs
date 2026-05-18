@@ -15,8 +15,8 @@
 
 namespace TrackHub.Manager.Domain.Interfaces;
 
-public interface IUserReader
+public interface IAccountFeatureReader
 {
-    Task<UserVm> GetUserAsync(Guid id, CancellationToken cancellationToken);
+    Task EnsureFeatureEnabledAsync(Guid accountId, string featureKey, CancellationToken cancellationToken);
 }
 

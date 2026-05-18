@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
+// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -53,3 +53,4 @@ public class GeofenceConfiguration : IEntityTypeConfiguration<Geofence>
             .HasDatabaseName("ix_geofences_accountid");
     }
 }
+

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
+// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<GeofenceEvent> GeofenceEvents { get; set; }
     public DbSet<VwTransporterPosition> Transporters { get; set; }
     public DbSet<VwUser> Users { get; set; }
+    public DbSet<AccountFeature> AccountFeatures { get; set; }
+    public DbSet<AuditEvent> AuditEvents { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -30,3 +32,4 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         base.OnModelCreating(builder);
     }
 }
+

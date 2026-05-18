@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
+// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ public class CreateGeofenceCommandHandlerTests
     private readonly Mock<IGeofenceWriter> _geofenceWriterMock = new();
     private readonly Mock<IUserReader> _userReaderMock = new();
     private readonly Mock<IUser> _userMock = new();
+    private readonly Mock<IAccountFeatureReader> _featureReaderMock = new();
 
     [SetUp]
     public void SetUp()
@@ -41,9 +42,11 @@ public class CreateGeofenceCommandHandlerTests
         var command = new CreateGeofenceCommand(geofenceDto);
         var userVm = new UserVm { AccountId = Guid.NewGuid() };
         var geofenceVm = new GeofenceVm();
-        var handler = new CreateGeofenceCommandHandler(_geofenceWriterMock.Object, _userReaderMock.Object, _userMock.Object);
+        var handler = new CreateGeofenceCommandHandler(_geofenceWriterMock.Object, _userReaderMock.Object, _userMock.Object, _featureReaderMock.Object);
 
         _userReaderMock.Setup(r => r.GetUserAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(userVm);
+        _featureReaderMock.Setup(r => r.EnsureFeatureEnabledAsync(userVm.AccountId, FeatureKeys.Geofencing, It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
         _geofenceWriterMock.Setup(w => w.CreateGeofenceAsync(It.IsAny<GeofenceDto>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(geofenceVm);
 
         // Act
@@ -52,6 +55,7 @@ public class CreateGeofenceCommandHandlerTests
         // Assert
         Assert.That(result, Is.EqualTo(geofenceVm));
         _userReaderMock.Verify(r => r.GetUserAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
+        _featureReaderMock.Verify(r => r.EnsureFeatureEnabledAsync(userVm.AccountId, FeatureKeys.Geofencing, It.IsAny<CancellationToken>()), Times.Once);
         _geofenceWriterMock.Verify(w => w.CreateGeofenceAsync(It.IsAny<GeofenceDto>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -62,6 +66,7 @@ public class CreateGeofenceCommandHandlerTests
         _userMock.Setup(u => u.Id).Returns(() => null);
 
         // Act & Assert
-        Assert.Throws<UnauthorizedAccessException>(() => new CreateGeofenceCommandHandler(_geofenceWriterMock.Object, _userReaderMock.Object, _userMock.Object));
+        Assert.Throws<UnauthorizedAccessException>(() => new CreateGeofenceCommandHandler(_geofenceWriterMock.Object, _userReaderMock.Object, _userMock.Object, _featureReaderMock.Object));
     }
 }
+

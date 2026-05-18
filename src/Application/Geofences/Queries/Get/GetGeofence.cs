@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
+// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ namespace TrackHub.Manager.Application.Geofences.Queries.Get;
 [Authorize(Resource = Resources.Geofences, Action = Actions.Read)]
 public readonly record struct GetGeofenceQuery(Guid Id) : IRequest<GeofenceVm>;
 
-public class GetGeofenceQueryHandler(IGeofenceReader reader, IUserReader userReader, IUser user) : IRequestHandler<GetGeofenceQuery, GeofenceVm>
+public class GetGeofenceQueryHandler(IGeofenceReader reader, IUserReader userReader, IUser user, IAccountFeatureReader accountFeatureReader) : IRequestHandler<GetGeofenceQuery, GeofenceVm>
 {
     private Guid UserId { get; } = user.Id is null ? throw new UnauthorizedAccessException() : new Guid(user.Id);
 
@@ -30,7 +30,9 @@ public class GetGeofenceQueryHandler(IGeofenceReader reader, IUserReader userRea
         var currentUser = await userReader.GetUserAsync(UserId, cancellationToken);
         if (result.AccountId != currentUser.AccountId)
             throw new ForbiddenAccessException();
+        await accountFeatureReader.EnsureFeatureEnabledAsync(currentUser.AccountId, FeatureKeys.Geofencing, cancellationToken);
         return result;
     }
 
 }
+

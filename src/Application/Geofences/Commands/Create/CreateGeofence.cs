@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
+// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -20,12 +20,14 @@ namespace TrackHub.Manager.Application.Geofences.Commands.Create;
 [Authorize(Resource = Resources.Geofences, Action = Actions.Write)]
 public readonly record struct CreateGeofenceCommand(GeofenceDto Geofence) : IRequest<GeofenceVm>;
 
-public class CreateGeofenceCommandHandler(IGeofenceWriter writer, IUserReader userReader, IUser user) : IRequestHandler<CreateGeofenceCommand, GeofenceVm>
+public class CreateGeofenceCommandHandler(IGeofenceWriter writer, IUserReader userReader, IUser user, IAccountFeatureReader accountFeatureReader) : IRequestHandler<CreateGeofenceCommand, GeofenceVm>
 {
     private Guid UserId { get; } = user.Id is null ? throw new UnauthorizedAccessException() : new Guid(user.Id);
     public async Task<GeofenceVm> Handle(CreateGeofenceCommand request, CancellationToken cancellationToken)
     {
         var user = await userReader.GetUserAsync(UserId, cancellationToken);
+        await accountFeatureReader.EnsureFeatureEnabledAsync(user.AccountId, FeatureKeys.Geofencing, cancellationToken);
         return await writer.CreateGeofenceAsync(request.Geofence, user.AccountId, cancellationToken); 
     }
 }
+

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
+// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -13,11 +13,13 @@
 //  limitations under the License.
 //
 
+using System.Text.Json;
+using Common.Application.Interfaces;
 using NetTopologySuite.Geometries;
 
 namespace TrackHub.Manager.Infrastructure.ManagerDB.Writers;
 
-public sealed class GeofenceWriter(IApplicationDbContext context) : IGeofenceWriter
+public sealed class GeofenceWriter(IApplicationDbContext context, IUser user) : IGeofenceWriter
 {
     public async Task<GeofenceVm> CreateGeofenceAsync(GeofenceDto geofenceDto, Guid accountId, CancellationToken cancellationToken)
     {
@@ -32,6 +34,7 @@ public sealed class GeofenceWriter(IApplicationDbContext context) : IGeofenceWri
             true);
 
         await context.Geofences.AddAsync(geofence, cancellationToken);
+        AddAuditEvent(accountId, "CreateGeofence", geofence.GeofenceId, null, ToAuditJson(geofence));
         await context.SaveChangesAsync(cancellationToken);
 
         return new GeofenceVm(
@@ -49,6 +52,7 @@ public sealed class GeofenceWriter(IApplicationDbContext context) : IGeofenceWri
     {
         var geofence = await context.Geofences.FindAsync([geofenceDto.GeofenceId], cancellationToken)
             ?? throw new NotFoundException(nameof(Geofence), $"{geofenceDto.GeofenceId}");
+        var oldValues = ToAuditJson(geofence);
 
         context.Geofences.Attach(geofence);
 
@@ -58,6 +62,7 @@ public sealed class GeofenceWriter(IApplicationDbContext context) : IGeofenceWri
         geofence.Color = geofenceDto.Color;
         geofence.Type = geofenceDto.Type;
         geofence.Active = geofenceDto.Active;
+        AddAuditEvent(geofence.AccountId, "UpdateGeofence", geofence.GeofenceId, oldValues, ToAuditJson(geofence));
 
         await context.SaveChangesAsync(cancellationToken);
     }
@@ -68,6 +73,7 @@ public sealed class GeofenceWriter(IApplicationDbContext context) : IGeofenceWri
             ?? throw new NotFoundException(nameof(Geofence), $"{geofenceId}");
 
         context.Geofences.Attach(geofence);
+        AddAuditEvent(geofence.AccountId, "DeleteGeofence", geofence.GeofenceId, ToAuditJson(geofence), null);
 
         context.Geofences.Remove(geofence);
         await context.SaveChangesAsync(cancellationToken);
@@ -82,4 +88,35 @@ public sealed class GeofenceWriter(IApplicationDbContext context) : IGeofenceWri
             SRID = 4326
         };
     }
+
+    private void AddAuditEvent(Guid accountId, string action, Guid geofenceId, string? oldValuesJson, string? newValuesJson)
+    {
+        context.AuditEvents.Add(new AuditEvent(
+            accountId,
+            user.PrincipalType.ToString(),
+            user.UserId?.ToString() ?? user.ClientId ?? user.SubjectId ?? string.Empty,
+            action,
+            "Geofence",
+            geofenceId.ToString(),
+            "Success",
+            oldValuesJson,
+            newValuesJson,
+            null,
+            null,
+            null,
+            user.CorrelationId));
+    }
+
+    private static string ToAuditJson(Geofence geofence)
+        => JsonSerializer.Serialize(new
+        {
+            geofence.GeofenceId,
+            geofence.AccountId,
+            geofence.Name,
+            geofence.Description,
+            geofence.Color,
+            geofence.Type,
+            geofence.Active
+        });
 }
+

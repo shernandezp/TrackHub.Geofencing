@@ -17,19 +17,19 @@ using Common.Domain.Constants;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace TrackHub.Manager.Infrastructure.ManagerDB.Configurations;
-public class VwUserConfiguration : IEntityTypeConfiguration<VwUser>
+
+public class AccountFeatureConfiguration : IEntityTypeConfiguration<AccountFeature>
 {
-    public void Configure(EntityTypeBuilder<VwUser> builder)
+    public void Configure(EntityTypeBuilder<AccountFeature> builder)
     {
-        //Table name
-        builder.ToView(name: ViewMetadata.VwUsers, schema: SchemaMetadata.Geofencing);
-
-        //Column names
-        builder.Property(x => x.UserId).HasColumnName("id");
-        builder.Property(x => x.Username).HasColumnName("username");
+        builder.ToTable(name: TableMetadata.AccountFeature, schema: SchemaMetadata.Application);
+        builder.Property(x => x.AccountFeatureId).HasColumnName("id");
         builder.Property(x => x.AccountId).HasColumnName("accountid");
-
-        builder.HasKey(e => e.UserId);
+        builder.Property(x => x.FeatureKey).HasColumnName("featurekey");
+        builder.Property(x => x.Enabled).HasColumnName("enabled");
+        builder.Property(x => x.EffectiveFrom).HasColumnName("effectivefrom");
+        builder.Property(x => x.EffectiveTo).HasColumnName("effectiveto");
+        builder.HasKey(x => x.AccountFeatureId);
+        builder.HasIndex(x => new { x.AccountId, x.FeatureKey });
     }
 }
-

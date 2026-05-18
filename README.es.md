@@ -1,4 +1,4 @@
-﻿﻿# API de Geocercado de TrackHub
+# API de Geocercado de TrackHub
 
 ## Características Principales
 
@@ -109,3 +109,4 @@ El uso de **GraphQL** permite consultas eficientes y personalizables, permitiend
 ## Licencia
 
 Este proyecto está bajo la Licencia Apache 2.0. Consulta el archivo [LICENSE](https://www.apache.org/licenses/LICENSE-2.0) para más información.
+
