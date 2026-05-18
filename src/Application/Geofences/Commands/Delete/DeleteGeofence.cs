@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
+// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ namespace TrackHub.Manager.Application.Geofences.Commands.Delete;
 [Authorize(Resource = Resources.Geofences, Action = Actions.Delete)]
 public record DeleteGeofenceCommand(Guid Id) : IRequest;
 
-public class DeleteGeofenceCommandHandler(IGeofenceWriter writer, IGeofenceReader reader, IUserReader userReader, IUser user, IPlatformFeatureReader platformFeatureReader) : IRequestHandler<DeleteGeofenceCommand>
+public class DeleteGeofenceCommandHandler(IGeofenceWriter writer, IGeofenceReader reader, IUserReader userReader, IUser user, IAccountFeatureReader accountFeatureReader) : IRequestHandler<DeleteGeofenceCommand>
 {
     private Guid UserId { get; } = user.Id is null ? throw new UnauthorizedAccessException() : new Guid(user.Id);
 
@@ -31,8 +31,9 @@ public class DeleteGeofenceCommandHandler(IGeofenceWriter writer, IGeofenceReade
         if (currentGeofence.AccountId != currentUser.AccountId)
             throw new ForbiddenAccessException();
 
-        await platformFeatureReader.EnsureFeatureEnabledAsync(currentUser.AccountId, FeatureKeys.Geofencing, cancellationToken);
+        await accountFeatureReader.EnsureFeatureEnabledAsync(currentUser.AccountId, FeatureKeys.Geofencing, cancellationToken);
         await writer.DeleteGeofenceAsync(request.Id, cancellationToken);
     }
 
 }
+

@@ -12,7 +12,7 @@ public class GetGeofenceQueryHandlerTests
     private Mock<IGeofenceReader> _readerMock = null!;
     private Mock<IUserReader> _userReaderMock = null!;
     private Mock<IUser> _userMock = null!;
-    private Mock<IPlatformFeatureReader> _featureReaderMock = null!;
+    private Mock<IAccountFeatureReader> _featureReaderMock = null!;
     private Guid _userId;
     private Guid _accountId;
 
@@ -22,7 +22,7 @@ public class GetGeofenceQueryHandlerTests
         _readerMock = new Mock<IGeofenceReader>();
         _userReaderMock = new Mock<IUserReader>();
         _userMock = new Mock<IUser>();
-        _featureReaderMock = new Mock<IPlatformFeatureReader>();
+        _featureReaderMock = new Mock<IAccountFeatureReader>();
         _userId = Guid.NewGuid();
         _accountId = Guid.NewGuid();
         _userMock.Setup(u => u.Id).Returns(_userId.ToString());
@@ -80,3 +80,4 @@ public class GetGeofenceQueryHandlerTests
             new GetGeofenceQueryHandler(_readerMock.Object, _userReaderMock.Object, _userMock.Object, _featureReaderMock.Object));
     }
 }
+

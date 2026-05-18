@@ -22,17 +22,18 @@ public readonly record struct ProcessPositionsCommand(
     Guid AccountId,
     IEnumerable<TransporterPositionDto> Positions) : IRequest<GeofenceProcessingResultVm>;
 
-public class ProcessPositionsCommandHandler(IGeofenceDetectionService detectionService, IPlatformFeatureReader platformFeatureReader)
+public class ProcessPositionsCommandHandler(IGeofenceDetectionService detectionService, IAccountFeatureReader accountFeatureReader)
     : IRequestHandler<ProcessPositionsCommand, GeofenceProcessingResultVm>
 {
     public async Task<GeofenceProcessingResultVm> Handle(
         ProcessPositionsCommand request,
         CancellationToken cancellationToken)
     {
-        await platformFeatureReader.EnsureFeatureEnabledAsync(request.AccountId, FeatureKeys.Geofencing, cancellationToken);
+        await accountFeatureReader.EnsureFeatureEnabledAsync(request.AccountId, FeatureKeys.Geofencing, cancellationToken);
         return await detectionService.ProcessPositionsAsync(
             request.Positions,
             request.AccountId,
             cancellationToken);
     }
 }
+

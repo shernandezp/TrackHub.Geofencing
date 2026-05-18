@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
+// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 using TrackHub.Manager.Infrastructure.ManagerDB;
+using TrackHub.Manager.Infrastructure.Readers;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -48,8 +49,9 @@ public static class DependencyInjection
         services.AddScoped<IGeofenceEventWriter, GeofenceEventWriter>();
         services.AddScoped<IUserReader, UserReader>();
         services.AddScoped<ITransportersInGeofence, TransportersInGeofence>();
-        services.AddScoped<IPlatformFeatureReader, PlatformFeatureReader>();
+        services.AddScoped<IAccountFeatureReader, AccountFeatureReader>();
 
         return services;
     }
 }
+

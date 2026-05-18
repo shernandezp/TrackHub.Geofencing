@@ -13,7 +13,7 @@ public class UpdateGeofenceCommandHandlerTests
     private Mock<IGeofenceReader> _readerMock = null!;
     private Mock<IUserReader> _userReaderMock = null!;
     private Mock<IUser> _userMock = null!;
-    private Mock<IPlatformFeatureReader> _featureReaderMock = null!;
+    private Mock<IAccountFeatureReader> _featureReaderMock = null!;
     private Guid _userId;
     private Guid _accountId;
 
@@ -24,7 +24,7 @@ public class UpdateGeofenceCommandHandlerTests
         _readerMock = new Mock<IGeofenceReader>();
         _userReaderMock = new Mock<IUserReader>();
         _userMock = new Mock<IUser>();
-        _featureReaderMock = new Mock<IPlatformFeatureReader>();
+        _featureReaderMock = new Mock<IAccountFeatureReader>();
         _userId = Guid.NewGuid();
         _accountId = Guid.NewGuid();
         _userMock.Setup(u => u.Id).Returns(_userId.ToString());
@@ -67,3 +67,4 @@ public class UpdateGeofenceCommandHandlerTests
         _writerMock.Verify(w => w.UpdateGeofenceAsync(It.IsAny<GeofenceDto>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 }
+

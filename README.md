@@ -11,12 +11,6 @@ We believe in the strength of community collaboration to create effective and ac
 ![Image](https://github.com/shernandezp/TrackHub.AuthorityServer/blob/master/src/Web/wwwroot/images/logo.png)
 
 
-## Platform Foundation Enhancements
-
-- Enforces account ownership, group visibility, and the `geofencing` account feature before exposing geofence data.
-- Publishes geofence events with stable paging so downstream modules and reports can consume them safely.
-- Reuses Manager-owned tenant and transporter visibility data instead of duplicating authorization rules.
-
 ---
 
 ## Project Repositories
@@ -33,5 +27,6 @@ We believe in the strength of community collaboration to create effective and ac
 | **TrackHub Web**            | [https://github.com/shernandezp/TrackHub](https://github.com/shernandezp/TrackHub)          |
 
 CREATE EXTENSION postgis;
+
 
 

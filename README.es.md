@@ -13,15 +13,6 @@
 
 ---
 
-
-## Mejoras de Plataforma Base
-
-- Aplica propiedad por cuenta, visibilidad por grupos y la caracteristica de cuenta `geofencing` antes de exponer datos de geocercas.
-- Publica eventos de geocerca con paginacion estable para que modulos posteriores y reportes puedan consumirlos de forma segura.
-- Reutiliza datos de tenant y visibilidad de transportadores administrados por Manager en lugar de duplicar reglas de autorizacion.
-
----
-
 ## Inicio Rápido
 
 ### Requisitos Previos

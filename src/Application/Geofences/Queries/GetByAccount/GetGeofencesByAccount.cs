@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
+// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -21,14 +21,15 @@ namespace TrackHub.Manager.Application.Geofences.Queries.GetByAccount;
 [Caching]
 public readonly record struct GetGeofencesByAccountQuery(bool EnableCaching) : IRequest<IReadOnlyCollection<GeofenceVm>>;
 
-public class GetGeofencesByAccountQueryHandler(IGeofenceReader reader, IUserReader userReader, IUser user, IPlatformFeatureReader platformFeatureReader) : IRequestHandler<GetGeofencesByAccountQuery, IReadOnlyCollection<GeofenceVm>>
+public class GetGeofencesByAccountQueryHandler(IGeofenceReader reader, IUserReader userReader, IUser user, IAccountFeatureReader accountFeatureReader) : IRequestHandler<GetGeofencesByAccountQuery, IReadOnlyCollection<GeofenceVm>>
 {
     private Guid UserId { get; } = user.Id is null ? throw new UnauthorizedAccessException() : new Guid(user.Id);
     public async Task<IReadOnlyCollection<GeofenceVm>> Handle(GetGeofencesByAccountQuery request, CancellationToken cancellationToken)
     {
         var user = await userReader.GetUserAsync(UserId, cancellationToken);
-        await platformFeatureReader.EnsureFeatureEnabledAsync(user.AccountId, FeatureKeys.Geofencing, cancellationToken);
+        await accountFeatureReader.EnsureFeatureEnabledAsync(user.AccountId, FeatureKeys.Geofencing, cancellationToken);
         return await reader.GetGeofencesAsync(user.AccountId, cancellationToken);
     }
 
 }
+

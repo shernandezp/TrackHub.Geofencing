@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
+// Copyright (c) 2026 Sergio Hernandez. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ public class CreateGeofenceCommandHandlerTests
     private readonly Mock<IGeofenceWriter> _geofenceWriterMock = new();
     private readonly Mock<IUserReader> _userReaderMock = new();
     private readonly Mock<IUser> _userMock = new();
-    private readonly Mock<IPlatformFeatureReader> _featureReaderMock = new();
+    private readonly Mock<IAccountFeatureReader> _featureReaderMock = new();
 
     [SetUp]
     public void SetUp()
@@ -69,3 +69,4 @@ public class CreateGeofenceCommandHandlerTests
         Assert.Throws<UnauthorizedAccessException>(() => new CreateGeofenceCommandHandler(_geofenceWriterMock.Object, _userReaderMock.Object, _userMock.Object, _featureReaderMock.Object));
     }
 }
+

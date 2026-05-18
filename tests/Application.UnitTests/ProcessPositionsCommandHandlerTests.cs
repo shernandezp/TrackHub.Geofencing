@@ -9,13 +9,13 @@ namespace TrackHub.Manager.Application.UnitTests.GeofenceEvents.Commands.Process
 public class ProcessPositionsCommandHandlerTests
 {
     private Mock<IGeofenceDetectionService> _detectionServiceMock = null!;
-    private Mock<IPlatformFeatureReader> _featureReaderMock = null!;
+    private Mock<IAccountFeatureReader> _featureReaderMock = null!;
 
     [SetUp]
     public void SetUp()
     {
         _detectionServiceMock = new Mock<IGeofenceDetectionService>();
-        _featureReaderMock = new Mock<IPlatformFeatureReader>();
+        _featureReaderMock = new Mock<IAccountFeatureReader>();
     }
 
     [Test]
@@ -49,3 +49,4 @@ public class ProcessPositionsCommandHandlerTests
             It.Is<CancellationToken>(ct => ct == cts.Token)), Times.Once);
     }
 }
+

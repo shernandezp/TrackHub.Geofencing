@@ -15,9 +15,9 @@
 
 using HotChocolate;
 
-namespace TrackHub.Manager.Infrastructure.ManagerDB.Readers;
+namespace TrackHub.Manager.Infrastructure.Readers;
 
-public sealed class PlatformFeatureReader(IApplicationDbContext context) : IPlatformFeatureReader
+public sealed class AccountFeatureReader(IApplicationDbContext context) : IAccountFeatureReader
 {
     public async Task EnsureFeatureEnabledAsync(Guid accountId, string featureKey, CancellationToken cancellationToken)
     {
@@ -39,3 +39,4 @@ public sealed class PlatformFeatureReader(IApplicationDbContext context) : IPlat
         }
     }
 }
+

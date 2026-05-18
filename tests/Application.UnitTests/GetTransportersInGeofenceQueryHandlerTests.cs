@@ -10,7 +10,7 @@ public class GetTransportersInGeofenceQueryHandlerTests
     private Mock<ITransportersInGeofence> _readerMock = null!;
     private Mock<IUserReader> _userReaderMock = null!;
     private Mock<IUser> _userMock = null!;
-    private Mock<IPlatformFeatureReader> _featureReaderMock = null!;
+    private Mock<IAccountFeatureReader> _featureReaderMock = null!;
 
     [SetUp]
     public void SetUp()
@@ -18,7 +18,7 @@ public class GetTransportersInGeofenceQueryHandlerTests
         _readerMock = new Mock<ITransportersInGeofence>();
         _userReaderMock = new Mock<IUserReader>();
         _userMock = new Mock<IUser>();
-        _featureReaderMock = new Mock<IPlatformFeatureReader>();
+        _featureReaderMock = new Mock<IAccountFeatureReader>();
         _userMock.Setup(u => u.Id).Returns(Guid.NewGuid().ToString());
     }
 
@@ -57,3 +57,4 @@ public class GetTransportersInGeofenceQueryHandlerTests
         Assert.Throws<UnauthorizedAccessException>(() => new GetTransportersInGeofenceQueryHandler(_readerMock.Object, _userReaderMock.Object, _userMock.Object, _featureReaderMock.Object));
     }
 }
+
