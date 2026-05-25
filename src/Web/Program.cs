@@ -40,6 +40,7 @@ builder.Services
     .AddGraphQLServer()
     .AddAuthorization()
     .AddMaxExecutionDepthRule(15)
+    .AddErrorFilter<TrackHubGraphQLErrorFilter>()
     .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = builder.Environment.IsDevelopment())
     .AddQueryType<Query>()
     .AddMutationType<Mutation>();
