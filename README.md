@@ -24,9 +24,14 @@ We believe in the strength of community collaboration to create effective and ac
 | **Router API**              | [https://github.com/shernandezp/TrackHubRouter](https://github.com/shernandezp/TrackHubRouter)    |
 | **Geofencing API**          | [https://github.com/shernandezp/TrackHub.Geofencing](https://github.com/shernandezp/TrackHub.Geofencing)    |
 | **Reporting API**           | [https://github.com/shernandezp/TrackHub.Reporting](https://github.com/shernandezp/TrackHub.Reporting)    |
+| **Telemetry API**           | [https://github.com/shernandezp/TrackHub.Telemetry](https://github.com/shernandezp/TrackHub.Telemetry)    |
 | **TrackHub Web**            | [https://github.com/shernandezp/TrackHub](https://github.com/shernandezp/TrackHub)          |
 
 CREATE EXTENSION postgis;
 
 
 
+
+## Overview
+
+The Geofencing API owns geofences and geofence entry/exit events, evaluating transporter positions against each account's geofences.
