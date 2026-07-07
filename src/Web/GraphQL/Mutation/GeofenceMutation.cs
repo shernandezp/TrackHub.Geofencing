@@ -13,11 +13,11 @@
 //  limitations under the License.
 //
 
-using TrackHub.Manager.Application.Geofences.Commands.Create;
-using TrackHub.Manager.Application.Geofences.Commands.Delete;
-using TrackHub.Manager.Application.Geofences.Commands.Update;
+using TrackHub.Geofencing.Application.Geofences.Commands.Create;
+using TrackHub.Geofencing.Application.Geofences.Commands.Delete;
+using TrackHub.Geofencing.Application.Geofences.Commands.Update;
 
-namespace TrackHub.Manager.Web.GraphQL.Mutation;
+namespace TrackHub.Geofencing.Web.GraphQL.Mutation;
 
 public partial class Mutation
 {

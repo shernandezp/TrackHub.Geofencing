@@ -13,6 +13,6 @@
 //  limitations under the License.
 //
 
-global using TrackHub.Manager.Domain.Models;
+global using TrackHub.Geofencing.Domain.Models;
 global using Common.Web.Infrastructure;
 global using Common.Mediator;

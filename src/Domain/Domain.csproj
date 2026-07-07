@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>TrackHub.Manager.Domain</RootNamespace>
-    <AssemblyName>TrackHub.Manager.Domain</AssemblyName>
+    <RootNamespace>TrackHub.Geofencing.Domain</RootNamespace>
+    <AssemblyName>TrackHub.Geofencing.Domain</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="TrackHubCommon.Domain" />

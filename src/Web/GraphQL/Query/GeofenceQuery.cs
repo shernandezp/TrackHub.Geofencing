@@ -13,10 +13,10 @@
 //  limitations under the License.
 //
 
-using TrackHub.Manager.Application.Geofences.Queries.Get;
-using TrackHub.Manager.Application.Geofences.Queries.GetByAccount;
+using TrackHub.Geofencing.Application.Geofences.Queries.Get;
+using TrackHub.Geofencing.Application.Geofences.Queries.GetByAccount;
 
-namespace TrackHub.Manager.Web.GraphQL.Query;
+namespace TrackHub.Geofencing.Web.GraphQL.Query;
 
 public partial class Query
 {

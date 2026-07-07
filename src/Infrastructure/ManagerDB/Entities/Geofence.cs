@@ -16,7 +16,7 @@
 using Common.Infrastructure;
 using NetTopologySuite.Geometries;
 
-namespace TrackHub.Manager.Infrastructure.ManagerDB.Entities;
+namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Entities;
 
 public class Geofence(Guid geofenceId, Polygon geom, Guid accountId, string name, string? description, short color, short type, bool active) : BaseAuditableEntity
 {

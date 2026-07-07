@@ -13,9 +13,9 @@
 //  limitations under the License.
 //
 
-using TrackHub.Manager.Application.GeofenceEvents.Services.Interfaces;
+using TrackHub.Geofencing.Application.GeofenceEvents.Services.Interfaces;
 
-namespace TrackHub.Manager.Application.GeofenceEvents.Commands.ProcessPositions;
+namespace TrackHub.Geofencing.Application.GeofenceEvents.Commands.ProcessPositions;
 
 [Authorize(Resource = Resources.Geofencing, Action = Actions.Custom)]
 public readonly record struct ProcessPositionsCommand(

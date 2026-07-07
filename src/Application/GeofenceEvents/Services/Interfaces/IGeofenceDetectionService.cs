@@ -13,7 +13,7 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Manager.Application.GeofenceEvents.Services.Interfaces;
+namespace TrackHub.Geofencing.Application.GeofenceEvents.Services.Interfaces;
 
 /// <summary>
 /// Interface for geofence detection service.

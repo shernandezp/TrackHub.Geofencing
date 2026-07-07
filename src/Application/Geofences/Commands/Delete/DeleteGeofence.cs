@@ -15,7 +15,7 @@
 
 using Common.Application.Interfaces;
 
-namespace TrackHub.Manager.Application.Geofences.Commands.Delete;
+namespace TrackHub.Geofencing.Application.Geofences.Commands.Delete;
 
 [Authorize(Resource = Resources.Geofences, Action = Actions.Delete)]
 public record DeleteGeofenceCommand(Guid Id) : IRequest;

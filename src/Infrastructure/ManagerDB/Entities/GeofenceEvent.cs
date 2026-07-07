@@ -13,7 +13,7 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Manager.Infrastructure.ManagerDB.Entities;
+namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Entities;
 
 /// <summary>
 /// Entity representing a geofence entry or exit event.

@@ -15,7 +15,7 @@
 
 using Common.Application.Interfaces;
 
-namespace TrackHub.Manager.Application.Geofences.Commands.Update;
+namespace TrackHub.Geofencing.Application.Geofences.Commands.Update;
 
 [Authorize(Resource = Resources.Geofences, Action = Actions.Edit)]
 public readonly record struct UpdateGeofenceCommand(GeofenceDto Geofence) : IRequest;

@@ -13,7 +13,7 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Manager.Application.Geofences.Commands.Create;
+namespace TrackHub.Geofencing.Application.Geofences.Commands.Create;
 
 public sealed class CreateGeofenceValidator : AbstractValidator<CreateGeofenceCommand>
 {

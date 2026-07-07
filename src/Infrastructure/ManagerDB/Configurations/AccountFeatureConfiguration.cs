@@ -16,7 +16,7 @@
 using Common.Domain.Constants;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace TrackHub.Manager.Infrastructure.ManagerDB.Configurations;
+namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Configurations;
 
 public class AccountFeatureConfiguration : IEntityTypeConfiguration<AccountFeature>
 {

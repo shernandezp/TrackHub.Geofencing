@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TrackHub.Manager.Infrastructure.Resources {
+namespace TrackHub.Geofencing.Infrastructure.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace TrackHub.Manager.Infrastructure.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TrackHub.Manager.Infrastructure.Resources.Views", typeof(Views).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TrackHub.Geofencing.Infrastructure.Resources.Views", typeof(Views).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

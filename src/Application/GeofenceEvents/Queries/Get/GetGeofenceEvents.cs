@@ -15,7 +15,7 @@
 
 using Common.Application.Interfaces;
 
-namespace TrackHub.Manager.Application.GeofenceEvents.Queries.Get;
+namespace TrackHub.Geofencing.Application.GeofenceEvents.Queries.Get;
 
 [Authorize(Resource = Resources.Geofencing, Action = Actions.Read)]
 public readonly record struct GetGeofenceEventsQuery(

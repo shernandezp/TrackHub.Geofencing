@@ -13,9 +13,9 @@
 //  limitations under the License.
 //
 
-using TrackHub.Manager.Application.Geofences.Commands.Update;
+using TrackHub.Geofencing.Application.Geofences.Commands.Update;
 
-namespace TrackHub.Manager.Application.Transporters.Commands.Update;
+namespace TrackHub.Geofencing.Application.Transporters.Commands.Update;
 
 public sealed class UpdateGeofenceValidator : AbstractValidator<UpdateGeofenceCommand>
 {

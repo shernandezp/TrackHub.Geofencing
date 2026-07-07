@@ -1,9 +1,9 @@
-using TrackHub.Manager.Application.Geofences.Commands.Delete;
-using TrackHub.Manager.Domain.Interfaces;
+using TrackHub.Geofencing.Application.Geofences.Commands.Delete;
+using TrackHub.Geofencing.Domain.Interfaces;
 using Common.Application.Exceptions;
 using Common.Application.Interfaces;
 
-namespace TrackHub.Manager.Application.UnitTests.Geofences.Commands.Delete;
+namespace TrackHub.Geofencing.Application.UnitTests.Geofences.Commands.Delete;
 
 [TestFixture]
 public class DeleteGeofenceCommandHandlerTests

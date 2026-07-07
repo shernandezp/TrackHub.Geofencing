@@ -13,7 +13,7 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Manager.Application.GeofenceEvents.Commands.ProcessPositions;
+namespace TrackHub.Geofencing.Application.GeofenceEvents.Commands.ProcessPositions;
 
 public sealed class ProcessPositionsCommandValidator : AbstractValidator<ProcessPositionsCommand>
 {

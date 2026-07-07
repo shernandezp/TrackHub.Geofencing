@@ -13,9 +13,9 @@
 //  limitations under the License.
 //
 
-using TrackHub.Manager.Domain.Records;
+using TrackHub.Geofencing.Domain.Records;
 
-namespace TrackHub.Manager.Domain.Interfaces;
+namespace TrackHub.Geofencing.Domain.Interfaces;
 
 /// <summary>
 /// Interface for writing geofence event data.

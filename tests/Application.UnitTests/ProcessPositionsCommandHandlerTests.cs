@@ -1,9 +1,9 @@
-using TrackHub.Manager.Application.GeofenceEvents.Commands.ProcessPositions;
-using TrackHub.Manager.Application.GeofenceEvents.Services.Interfaces;
-using TrackHub.Manager.Domain.Interfaces;
-using TrackHub.Manager.Domain.Records;
+using TrackHub.Geofencing.Application.GeofenceEvents.Commands.ProcessPositions;
+using TrackHub.Geofencing.Application.GeofenceEvents.Services.Interfaces;
+using TrackHub.Geofencing.Domain.Interfaces;
+using TrackHub.Geofencing.Domain.Records;
 
-namespace TrackHub.Manager.Application.UnitTests.GeofenceEvents.Commands.ProcessPositions;
+namespace TrackHub.Geofencing.Application.UnitTests.GeofenceEvents.Commands.ProcessPositions;
 
 [TestFixture]
 public class ProcessPositionsCommandHandlerTests

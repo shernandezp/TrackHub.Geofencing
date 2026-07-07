@@ -13,7 +13,7 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Manager.Application.Geofences.Queries.Get;
+namespace TrackHub.Geofencing.Application.Geofences.Queries.Get;
 
 public class GetGeofenceValidator : AbstractValidator<GetGeofenceQuery>
 {

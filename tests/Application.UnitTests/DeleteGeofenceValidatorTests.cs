@@ -14,7 +14,7 @@
 //
 
 using FluentValidation.TestHelper;
-using TrackHub.Manager.Application.Geofences.Commands.Delete;
+using TrackHub.Geofencing.Application.Geofences.Commands.Delete;
 
 namespace Application.UnitTests.Geofences;
 

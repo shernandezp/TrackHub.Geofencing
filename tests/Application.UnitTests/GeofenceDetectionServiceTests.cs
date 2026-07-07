@@ -1,8 +1,8 @@
-using TrackHub.Manager.Application.GeofenceEvents.Services;
-using TrackHub.Manager.Domain.Interfaces;
-using TrackHub.Manager.Domain.Records;
+using TrackHub.Geofencing.Application.GeofenceEvents.Services;
+using TrackHub.Geofencing.Domain.Interfaces;
+using TrackHub.Geofencing.Domain.Records;
 
-namespace TrackHub.Manager.Application.UnitTests.GeofenceEvents.Services;
+namespace TrackHub.Geofencing.Application.UnitTests.GeofenceEvents.Services;
 
 [TestFixture]
 public class GeofenceDetectionServiceTests

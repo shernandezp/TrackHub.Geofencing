@@ -13,5 +13,5 @@
 //  limitations under the License.
 //
 
-global using TrackHub.Manager.Domain.Models;
+global using TrackHub.Geofencing.Domain.Models;
 

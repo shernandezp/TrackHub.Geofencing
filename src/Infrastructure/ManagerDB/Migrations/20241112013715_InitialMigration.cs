@@ -16,11 +16,11 @@
 using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using NetTopologySuite.Geometries;
-using TrackHub.Manager.Infrastructure.Resources;
+using TrackHub.Geofencing.Infrastructure.Resources;
 
 #nullable disable
 
-namespace TrackHub.Manager.Infrastructure.Migrations
+namespace TrackHub.Geofencing.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class InitialMigration : Migration

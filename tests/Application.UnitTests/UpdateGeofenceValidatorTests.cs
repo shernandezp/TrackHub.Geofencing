@@ -14,10 +14,10 @@
 //
 
 using FluentValidation.TestHelper;
-using TrackHub.Manager.Application.Geofences.Commands.Update;
-using TrackHub.Manager.Application.Transporters.Commands.Update;
-using TrackHub.Manager.Domain.Models;
-using TrackHub.Manager.Domain.Records;
+using TrackHub.Geofencing.Application.Geofences.Commands.Update;
+using TrackHub.Geofencing.Application.Transporters.Commands.Update;
+using TrackHub.Geofencing.Domain.Models;
+using TrackHub.Geofencing.Domain.Records;
 
 namespace Application.UnitTests.Geofences;
 

@@ -17,7 +17,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace TrackHub.Manager.Infrastructure.Migrations
+namespace TrackHub.Geofencing.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class GeofenceMandatoryFields : Migration

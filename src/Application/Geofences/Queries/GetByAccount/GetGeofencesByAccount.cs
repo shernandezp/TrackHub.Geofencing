@@ -15,7 +15,7 @@
 
 using Common.Application.Interfaces;
 
-namespace TrackHub.Manager.Application.Geofences.Queries.GetByAccount;
+namespace TrackHub.Geofencing.Application.Geofences.Queries.GetByAccount;
 
 [Authorize(Resource = Resources.Geofences, Action = Actions.Read)]
 [Caching]

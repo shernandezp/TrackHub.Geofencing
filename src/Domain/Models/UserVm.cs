@@ -13,7 +13,7 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Manager.Domain.Models;
+namespace TrackHub.Geofencing.Domain.Models;
 
 public record struct UserVm(
     Guid UserId,

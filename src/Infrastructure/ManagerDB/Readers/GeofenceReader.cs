@@ -15,7 +15,7 @@
 
 using NetTopologySuite.Geometries;
 
-namespace TrackHub.Manager.Infrastructure.ManagerDB.Readers;
+namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Readers;
 
 public sealed class GeofenceReader(IApplicationDbContext context) : IGeofenceReader
 {
