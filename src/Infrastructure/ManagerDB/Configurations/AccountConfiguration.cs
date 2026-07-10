@@ -13,18 +13,18 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Interfaces;
+using Common.Domain.Constants;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-public interface IApplicationDbContext
+namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Configurations;
+
+public sealed class AccountConfiguration : IEntityTypeConfiguration<Account>
 {
-    DbSet<Geofence> Geofences { get; set; }
-    DbSet<GeofenceEvent> GeofenceEvents { get; set; }
-    DbSet<VwTransporterPosition> Transporters { get; set; }
-    DbSet<VwUser> Users { get; set; }
-    DbSet<AccountFeature> AccountFeatures { get; set; }
-    DbSet<Account> Accounts { get; set; }
-    DbSet<AuditEvent> AuditEvents { get; set; }
-
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    public void Configure(EntityTypeBuilder<Account> builder)
+    {
+        builder.ToTable(name: TableMetadata.Account, schema: SchemaMetadata.Application);
+        builder.HasKey(x => x.AccountId);
+        builder.Property(x => x.AccountId).HasColumnName("id");
+        builder.Property(x => x.Status).HasColumnName("status");
+    }
 }
-

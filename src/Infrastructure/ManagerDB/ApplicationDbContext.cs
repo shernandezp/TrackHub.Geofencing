@@ -24,6 +24,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<VwTransporterPosition> Transporters { get; set; }
     public DbSet<VwUser> Users { get; set; }
     public DbSet<AccountFeature> AccountFeatures { get; set; }
+    public DbSet<Account> Accounts { get; set; }
     public DbSet<AuditEvent> AuditEvents { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
