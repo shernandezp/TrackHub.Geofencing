@@ -22,7 +22,7 @@ public readonly record struct UpdateGeofenceCommand(GeofenceDto Geofence) : IReq
 
 public class UpdateGeofenceCommandHandler(IGeofenceWriter writer, IGeofenceReader reader, IUserReader userReader, IUser user, IAccountFeatureReader accountFeatureReader) : IRequestHandler<UpdateGeofenceCommand>
 {
-    private Guid UserId { get; } = user.Id is null ? throw new UnauthorizedAccessException() : new Guid(user.Id);
+    private Guid UserId { get; } = Guid.TryParse(user.Id, out var userId) ? userId : throw new UnauthorizedAccessException();
 
     public async Task Handle(UpdateGeofenceCommand request, CancellationToken cancellationToken)
     {

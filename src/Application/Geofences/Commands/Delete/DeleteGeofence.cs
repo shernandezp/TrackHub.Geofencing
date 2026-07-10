@@ -22,7 +22,7 @@ public record DeleteGeofenceCommand(Guid Id) : IRequest;
 
 public class DeleteGeofenceCommandHandler(IGeofenceWriter writer, IGeofenceReader reader, IUserReader userReader, IUser user, IAccountFeatureReader accountFeatureReader) : IRequestHandler<DeleteGeofenceCommand>
 {
-    private Guid UserId { get; } = user.Id is null ? throw new UnauthorizedAccessException() : new Guid(user.Id);
+    private Guid UserId { get; } = Guid.TryParse(user.Id, out var userId) ? userId : throw new UnauthorizedAccessException();
 
     public async Task Handle(DeleteGeofenceCommand request, CancellationToken cancellationToken)
     {

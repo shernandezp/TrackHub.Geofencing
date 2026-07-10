@@ -26,7 +26,7 @@ public readonly record struct GetGeofenceEventsQuery(
 public class GetGeofenceEventsQueryHandler(IGeofenceEventReader reader, IUserReader userReader, IUser user, IAccountFeatureReader accountFeatureReader)
     : IRequestHandler<GetGeofenceEventsQuery, IReadOnlyCollection<GeofenceEventReportVm>>
 {
-    private Guid UserId { get; } = user.Id is null ? throw new UnauthorizedAccessException() : new Guid(user.Id);
+    private Guid UserId { get; } = Guid.TryParse(user.Id, out var userId) ? userId : throw new UnauthorizedAccessException();
 
     public async Task<IReadOnlyCollection<GeofenceEventReportVm>> Handle(GetGeofenceEventsQuery request, CancellationToken cancellationToken)
     {
