@@ -14,6 +14,7 @@
 //
 
 using System.Reflection;
+using Common.Infrastructure;
 
 namespace TrackHub.Geofencing.Infrastructure.ManagerDB;
 
@@ -31,6 +32,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     {
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(builder);
+    }
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder.UseUtcTimestamps();
+        base.ConfigureConventions(configurationBuilder);
     }
 }
 

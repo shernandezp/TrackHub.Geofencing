@@ -27,8 +27,8 @@ public sealed class GeofenceEventReader(IApplicationDbContext context) : IGeofen
                         evt.GeofenceEventId,
                         evt.TransporterId,
                         evt.GeofenceId,
-                        new(DateTime.SpecifyKind(evt.DateTime, DateTimeKind.Utc), DateTimeKind.Utc == DateTime.SpecifyKind(evt.DateTime, DateTimeKind.Utc).Kind ? TimeSpan.Zero : evt.Offset),
-                        evt.DepartureTimestamp == null || evt.DepartureOffset == null ? null : new(DateTime.SpecifyKind(evt.DepartureTimestamp.Value, DateTimeKind.Utc), DateTimeKind.Utc == DateTime.SpecifyKind(evt.DepartureTimestamp.Value, DateTimeKind.Utc).Kind ? TimeSpan.Zero : evt.DepartureOffset.Value),
+                        evt.EventDateTime,
+                        evt.DepartureTimestamp,
                         evt.Latitude,
                         evt.Longitude);
 
@@ -48,17 +48,15 @@ public sealed class GeofenceEventReader(IApplicationDbContext context) : IGeofen
                               join t in context.Transporters on evt.TransporterId equals t.TransporterId
                               where g.AccountId == accountId && g.Active
                               where t.UserId == userId
-                              where evt.DateTime >= fromDate.UtcDateTime && evt.DateTime <= toDate.UtcDateTime
+                              where evt.EventDateTime >= fromDate && evt.EventDateTime <= toDate
                               where transporterId == null || evt.TransporterId == transporterId
-                              orderby evt.DateTime descending
+                              orderby evt.EventDateTime descending
                               select new
                               {
                                   TransporterName = t.Name,
                                   GeofenceName = g.Name,
-                                  evt.DateTime,
-                                  evt.Offset,
+                                  evt.EventDateTime,
                                   evt.DepartureTimestamp,
-                                  evt.DepartureOffset,
                                   evt.Latitude,
                                   evt.Longitude
                               }).ToListAsync(cancellationToken);
@@ -66,16 +64,14 @@ public sealed class GeofenceEventReader(IApplicationDbContext context) : IGeofen
         return [.. rawEvents.Select(e => new GeofenceEventReportVm(
             e.TransporterName,
             e.GeofenceName,
-            new DateTimeOffset(DateTime.SpecifyKind(e.DateTime, DateTimeKind.Utc), TimeSpan.Zero),
-            e.DepartureTimestamp == null
-                ? null
-                : new DateTimeOffset(DateTime.SpecifyKind(e.DepartureTimestamp.Value, DateTimeKind.Utc), TimeSpan.Zero),
-            FormatTotalTime(e.DateTime, e.DepartureTimestamp),
+            e.EventDateTime,
+            e.DepartureTimestamp,
+            FormatTotalTime(e.EventDateTime, e.DepartureTimestamp),
             e.Latitude,
             e.Longitude))];
     }
 
-    private static string FormatTotalTime(DateTime dateTimeIn, DateTime? dateTimeOut)
+    private static string FormatTotalTime(DateTimeOffset dateTimeIn, DateTimeOffset? dateTimeOut)
     {
         if (dateTimeOut == null) return string.Empty;
         var duration = dateTimeOut.Value - dateTimeIn;

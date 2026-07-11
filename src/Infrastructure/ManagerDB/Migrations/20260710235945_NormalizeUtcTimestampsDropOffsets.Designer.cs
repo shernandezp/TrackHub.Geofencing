@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using TrackHub.Geofencing.Infrastructure.ManagerDB;
 namespace TrackHub.Geofencing.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260710235945_NormalizeUtcTimestampsDropOffsets")]
+    partial class NormalizeUtcTimestampsDropOffsets
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,150 +26,6 @@ namespace TrackHub.Geofencing.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("TrackHub.Geofencing.Infrastructure.ManagerDB.Entities.Account", b =>
-                {
-                    b.Property<Guid>("AccountId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<short>("Status")
-                        .HasColumnType("smallint")
-                        .HasColumnName("status");
-
-                    b.HasKey("AccountId");
-
-                    b.ToTable("accounts", "app", t =>
-                        {
-                            t.ExcludeFromMigrations();
-                        });
-                });
-
-            modelBuilder.Entity("TrackHub.Geofencing.Infrastructure.ManagerDB.Entities.AccountFeature", b =>
-                {
-                    b.Property<Guid>("AccountFeatureId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<Guid>("AccountId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("accountid");
-
-                    b.Property<DateTimeOffset?>("EffectiveFrom")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("effectivefrom");
-
-                    b.Property<DateTimeOffset?>("EffectiveTo")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("effectiveto");
-
-                    b.Property<bool>("Enabled")
-                        .HasColumnType("boolean")
-                        .HasColumnName("enabled");
-
-                    b.Property<string>("FeatureKey")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("featurekey");
-
-                    b.HasKey("AccountFeatureId");
-
-                    b.HasIndex("AccountId", "FeatureKey");
-
-                    b.ToTable("account_features", "app", t =>
-                        {
-                            t.ExcludeFromMigrations();
-                        });
-                });
-
-            modelBuilder.Entity("TrackHub.Geofencing.Infrastructure.ManagerDB.Entities.AuditEvent", b =>
-                {
-                    b.Property<Guid>("AuditEventId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<Guid>("AccountId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("accountid");
-
-                    b.Property<string>("Action")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("action");
-
-                    b.Property<string>("ActorId")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("actorid");
-
-                    b.Property<string>("ActorType")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("actortype");
-
-                    b.Property<string>("CorrelationId")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("correlationid");
-
-                    b.Property<string>("IpAddress")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("ipaddress");
-
-                    b.Property<string>("NewValuesJson")
-                        .HasColumnType("text")
-                        .HasColumnName("newvaluesjson");
-
-                    b.Property<DateTimeOffset>("OccurredAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("occurredat");
-
-                    b.Property<string>("OldValuesJson")
-                        .HasColumnType("text")
-                        .HasColumnName("oldvaluesjson");
-
-                    b.Property<string>("Reason")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)")
-                        .HasColumnName("reason");
-
-                    b.Property<string>("ResourceId")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("resourceid");
-
-                    b.Property<string>("ResourceType")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("resourcetype");
-
-                    b.Property<string>("Result")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("result");
-
-                    b.Property<string>("UserAgent")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)")
-                        .HasColumnName("useragent");
-
-                    b.HasKey("AuditEventId");
-
-                    b.ToTable("audit_events", "app", t =>
-                        {
-                            t.ExcludeFromMigrations();
-                        });
-                });
 
             modelBuilder.Entity("TrackHub.Geofencing.Infrastructure.ManagerDB.Entities.Geofence", b =>
                 {
@@ -220,9 +79,6 @@ namespace TrackHub.Geofencing.Infrastructure.Migrations
                         .HasColumnName("type");
 
                     b.HasKey("GeofenceId");
-
-                    b.HasIndex("AccountId")
-                        .HasDatabaseName("ix_geofences_accountid");
 
                     b.HasIndex("Geom")
                         .HasDatabaseName("geofence_idx");
