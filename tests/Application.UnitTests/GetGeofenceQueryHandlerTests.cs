@@ -1,10 +1,10 @@
-using TrackHub.Manager.Application.Geofences.Queries.Get;
-using TrackHub.Manager.Domain.Interfaces;
-using TrackHub.Manager.Domain.Models;
+using TrackHub.Geofencing.Application.Geofences.Queries.Get;
+using TrackHub.Geofencing.Domain.Interfaces;
+using TrackHub.Geofencing.Domain.Models;
 using Common.Application.Interfaces;
 using Common.Application.Exceptions;
 
-namespace TrackHub.Manager.Application.UnitTests.Geofences.Queries.Get;
+namespace TrackHub.Geofencing.Application.UnitTests.Geofences.Queries.Get;
 
 [TestFixture]
 public class GetGeofenceQueryHandlerTests

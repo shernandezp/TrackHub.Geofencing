@@ -15,7 +15,7 @@
 
 using Common.Application.Interfaces;
 
-namespace TrackHub.Manager.Application.Geofences.Queries.GetByAccount;
+namespace TrackHub.Geofencing.Application.Geofences.Queries.GetByAccount;
 
 [Authorize(Resource = Resources.Geofences, Action = Actions.Read)]
 [Caching]
@@ -23,7 +23,7 @@ public readonly record struct GetGeofencesByAccountQuery(bool EnableCaching) : I
 
 public class GetGeofencesByAccountQueryHandler(IGeofenceReader reader, IUserReader userReader, IUser user, IAccountFeatureReader accountFeatureReader) : IRequestHandler<GetGeofencesByAccountQuery, IReadOnlyCollection<GeofenceVm>>
 {
-    private Guid UserId { get; } = user.Id is null ? throw new UnauthorizedAccessException() : new Guid(user.Id);
+    private Guid UserId { get; } = Guid.TryParse(user.Id, out var userId) ? userId : throw new UnauthorizedAccessException();
     public async Task<IReadOnlyCollection<GeofenceVm>> Handle(GetGeofencesByAccountQuery request, CancellationToken cancellationToken)
     {
         var user = await userReader.GetUserAsync(UserId, cancellationToken);

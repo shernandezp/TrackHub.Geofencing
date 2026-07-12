@@ -17,19 +17,15 @@ using Common.Domain.Constants;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Configurations;
-public class VwUserConfiguration : IEntityTypeConfiguration<VwUser>
+
+public sealed class AccountConfiguration : IEntityTypeConfiguration<Account>
 {
-    public void Configure(EntityTypeBuilder<VwUser> builder)
+    public void Configure(EntityTypeBuilder<Account> builder)
     {
-        //Table name
-        builder.ToView(name: ViewMetadata.VwUsers, schema: SchemaMetadata.Geofencing);
-
-        //Column names
-        builder.Property(x => x.UserId).HasColumnName("id");
-        builder.Property(x => x.Username).HasColumnName("username");
-        builder.Property(x => x.AccountId).HasColumnName("accountid");
-
-        builder.HasKey(e => e.UserId);
+        // Manager-owned table (SVD-05): read-only here, never part of this repo's migrations
+        builder.ToTable(name: TableMetadata.Account, schema: SchemaMetadata.Application, t => t.ExcludeFromMigrations());
+        builder.HasKey(x => x.AccountId);
+        builder.Property(x => x.AccountId).HasColumnName("id");
+        builder.Property(x => x.Status).HasColumnName("status");
     }
 }
-

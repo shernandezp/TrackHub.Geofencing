@@ -16,7 +16,7 @@
 using Common.Domain.Constants;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace TrackHub.Manager.Infrastructure.ManagerDB.Configurations;
+namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Configurations;
 
 public class GeofenceEventConfiguration : IEntityTypeConfiguration<GeofenceEvent>
 {
@@ -32,10 +32,8 @@ public class GeofenceEventConfiguration : IEntityTypeConfiguration<GeofenceEvent
         builder.Property(x => x.GeofenceEventId).HasColumnName("id");
         builder.Property(x => x.TransporterId).HasColumnName("transporterid");
         builder.Property(x => x.GeofenceId).HasColumnName("geofenceid");
-        builder.Property(x => x.DateTime).HasColumnName("datetime");
-        builder.Property(x => x.Offset).HasColumnName("offset").HasColumnType("interval");
+        builder.Property(x => x.EventDateTime).HasColumnName("datetime");
         builder.Property(x => x.DepartureTimestamp).HasColumnName("departuretimestamp");
-        builder.Property(x => x.DepartureOffset).HasColumnName("departureoffset").HasColumnType("interval");
         builder.Property(x => x.Latitude).HasColumnName("latitude");
         builder.Property(x => x.Longitude).HasColumnName("longitude");
         // Indexes

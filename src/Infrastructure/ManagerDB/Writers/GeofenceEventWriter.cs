@@ -13,7 +13,7 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Manager.Infrastructure.ManagerDB.Writers;
+namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Writers;
 
 public sealed class GeofenceEventWriter(IApplicationDbContext context) : IGeofenceEventWriter
 {
@@ -28,8 +28,7 @@ public sealed class GeofenceEventWriter(IApplicationDbContext context) : IGeofen
         var evt = new GeofenceEvent(
             geofenceEvent.TransporterId,
             geofenceEvent.GeofenceId,
-            geofenceEvent.EventDateTime.UtcDateTime,
-            geofenceEvent.EventDateTime.Offset,
+            geofenceEvent.EventDateTime,
             geofenceEvent.Latitude,
             geofenceEvent.Longitude);
 
@@ -40,7 +39,7 @@ public sealed class GeofenceEventWriter(IApplicationDbContext context) : IGeofen
             evt.GeofenceEventId,
             evt.TransporterId,
             evt.GeofenceId,
-            new(DateTime.SpecifyKind(evt.DateTime, DateTimeKind.Utc), DateTimeKind.Utc == DateTime.SpecifyKind(evt.DateTime, DateTimeKind.Utc).Kind ? TimeSpan.Zero : evt.Offset),
+            evt.EventDateTime,
             evt.DepartureTimestamp,
             evt.Latitude,
             evt.Longitude);
@@ -56,8 +55,7 @@ public sealed class GeofenceEventWriter(IApplicationDbContext context) : IGeofen
 
         context.GeofenceEvents.Attach(evt);
 
-        evt.DepartureTimestamp = departureTimestamp.UtcDateTime;
-        evt.DepartureOffset = departureTimestamp.Offset;
+        evt.DepartureTimestamp = departureTimestamp;
         await context.SaveChangesAsync(cancellationToken);
     }
 }

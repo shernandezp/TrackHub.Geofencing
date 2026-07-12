@@ -13,9 +13,9 @@
 //  limitations under the License.
 //
 
-using TrackHub.Manager.Application.GeofenceEvents.Services.Interfaces;
+using TrackHub.Geofencing.Application.GeofenceEvents.Services.Interfaces;
 
-namespace TrackHub.Manager.Application.GeofenceEvents.Services;
+namespace TrackHub.Geofencing.Application.GeofenceEvents.Services;
 
 /// <summary>
 /// Service that processes transporter positions to detect geofence entry/exit events.

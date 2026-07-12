@@ -13,7 +13,7 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Manager.Domain.Interfaces;
+namespace TrackHub.Geofencing.Domain.Interfaces;
 
 /// <summary>
 /// Interface for reading geofence event data.

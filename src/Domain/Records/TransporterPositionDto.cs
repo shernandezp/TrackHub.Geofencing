@@ -13,7 +13,7 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Manager.Domain.Records;
+namespace TrackHub.Geofencing.Domain.Records;
 
 /// <summary>
 /// DTO for transporter position data for geofence detection.

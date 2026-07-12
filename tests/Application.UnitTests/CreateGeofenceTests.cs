@@ -14,11 +14,11 @@
 //
 
 using Common.Application.Interfaces;
-using TrackHub.Manager.Application.Geofences.Commands.Create;
-using TrackHub.Manager.Domain.Interfaces;
-using TrackHub.Manager.Domain.Records;
+using TrackHub.Geofencing.Application.Geofences.Commands.Create;
+using TrackHub.Geofencing.Domain.Interfaces;
+using TrackHub.Geofencing.Domain.Records;
 
-namespace TrackHub.Manager.Application.UnitTests.Credentials.Command.Create;
+namespace TrackHub.Geofencing.Application.UnitTests.Credentials.Command.Create;
 
 [TestFixture]
 public class CreateGeofenceCommandHandlerTests

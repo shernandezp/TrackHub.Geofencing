@@ -13,7 +13,7 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Manager.Domain.Models;
+namespace TrackHub.Geofencing.Domain.Models;
 
 /// <summary>
 /// View model for geofence event report data.

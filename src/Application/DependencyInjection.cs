@@ -15,8 +15,8 @@
 
 using System.Reflection;
 using Common.Application;
-using TrackHub.Manager.Application.GeofenceEvents.Services;
-using TrackHub.Manager.Application.GeofenceEvents.Services.Interfaces;
+using TrackHub.Geofencing.Application.GeofenceEvents.Services;
+using TrackHub.Geofencing.Application.GeofenceEvents.Services.Interfaces;
 
 namespace Microsoft.Extensions.DependencyInjection;
 

@@ -13,7 +13,7 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Manager.Infrastructure.ManagerDB.Interfaces;
+namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Interfaces;
 
 public interface IApplicationDbContext
 {
@@ -22,6 +22,7 @@ public interface IApplicationDbContext
     DbSet<VwTransporterPosition> Transporters { get; set; }
     DbSet<VwUser> Users { get; set; }
     DbSet<AccountFeature> AccountFeatures { get; set; }
+    DbSet<Account> Accounts { get; set; }
     DbSet<AuditEvent> AuditEvents { get; set; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);

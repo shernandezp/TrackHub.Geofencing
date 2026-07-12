@@ -14,7 +14,7 @@
 //
 
 using FluentValidation.TestHelper;
-using TrackHub.Manager.Application.Geofences.Queries.Get;
+using TrackHub.Geofencing.Application.Geofences.Queries.Get;
 
 namespace Application.UnitTests.Geofences;
 

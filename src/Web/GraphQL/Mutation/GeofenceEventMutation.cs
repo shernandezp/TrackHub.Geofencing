@@ -13,10 +13,10 @@
 //  limitations under the License.
 //
 
-using TrackHub.Manager.Application.GeofenceEvents.Commands.ProcessPositions;
-using TrackHub.Manager.Domain.Records;
+using TrackHub.Geofencing.Application.GeofenceEvents.Commands.ProcessPositions;
+using TrackHub.Geofencing.Domain.Records;
 
-namespace TrackHub.Manager.Web.GraphQL.Mutation;
+namespace TrackHub.Geofencing.Web.GraphQL.Mutation;
 
 public partial class Mutation
 {

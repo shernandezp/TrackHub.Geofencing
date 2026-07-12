@@ -1,8 +1,8 @@
-using TrackHub.Manager.Application.TransportersInGeofence.Queries.Get;
-using TrackHub.Manager.Domain.Interfaces;
+using TrackHub.Geofencing.Application.TransportersInGeofence.Queries.Get;
+using TrackHub.Geofencing.Domain.Interfaces;
 using Common.Application.Interfaces;
 
-namespace TrackHub.Manager.Application.UnitTests.TransportersInGeofence.Queries.Get;
+namespace TrackHub.Geofencing.Application.UnitTests.TransportersInGeofence.Queries.Get;
 
 [TestFixture]
 public class GetTransportersInGeofenceQueryHandlerTests

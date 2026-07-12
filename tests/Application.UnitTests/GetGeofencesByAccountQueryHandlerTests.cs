@@ -1,8 +1,8 @@
-using TrackHub.Manager.Application.Geofences.Queries.GetByAccount;
-using TrackHub.Manager.Domain.Interfaces;
+using TrackHub.Geofencing.Application.Geofences.Queries.GetByAccount;
+using TrackHub.Geofencing.Domain.Interfaces;
 using Common.Application.Interfaces;
 
-namespace TrackHub.Manager.Application.UnitTests.Geofences.Queries.GetByAccount;
+namespace TrackHub.Geofencing.Application.UnitTests.Geofences.Queries.GetByAccount;
 
 [TestFixture]
 public class GetGeofencesByAccountQueryHandlerTests

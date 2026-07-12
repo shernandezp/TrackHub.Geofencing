@@ -13,7 +13,7 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Manager.Application.Geofences.Commands.Delete;
+namespace TrackHub.Geofencing.Application.Geofences.Commands.Delete;
 
 public sealed class DeleteGeofenceValidator : AbstractValidator<DeleteGeofenceCommand>
 {

@@ -15,7 +15,7 @@
 
 using NetTopologySuite.Geometries;
 
-namespace TrackHub.Manager.Infrastructure.ManagerDB.Entities;
+namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Entities;
 
 public class VwTransporterPosition(
     Guid transporterId,

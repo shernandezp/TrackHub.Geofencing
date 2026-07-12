@@ -14,8 +14,9 @@
 //
 
 using System.Reflection;
+using Common.Infrastructure;
 
-namespace TrackHub.Manager.Infrastructure.ManagerDB;
+namespace TrackHub.Geofencing.Infrastructure.ManagerDB;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options), IApplicationDbContext
 {
@@ -24,12 +25,19 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<VwTransporterPosition> Transporters { get; set; }
     public DbSet<VwUser> Users { get; set; }
     public DbSet<AccountFeature> AccountFeatures { get; set; }
+    public DbSet<Account> Accounts { get; set; }
     public DbSet<AuditEvent> AuditEvents { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(builder);
+    }
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder.UseUtcTimestamps();
+        base.ConfigureConventions(configurationBuilder);
     }
 }
 

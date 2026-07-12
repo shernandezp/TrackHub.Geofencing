@@ -16,8 +16,8 @@
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
-using TrackHub.Manager.Infrastructure.ManagerDB;
-using TrackHub.Manager.Infrastructure.Readers;
+using TrackHub.Geofencing.Infrastructure.ManagerDB;
+using TrackHub.Geofencing.Infrastructure.Readers;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -40,7 +40,7 @@ public static class DependencyInjection
             options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         });
 
-        services.AddHeaderPropagation(o => o.Headers.Add("Authorization"));
+        services.AddTrackHubHeaderPropagation();
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
         services.AddScoped<IGeofenceWriter, GeofenceWriter>();
@@ -50,6 +50,11 @@ public static class DependencyInjection
         services.AddScoped<IUserReader, UserReader>();
         services.AddScoped<ITransportersInGeofence, TransportersInGeofence>();
         services.AddScoped<IAccountFeatureReader, AccountFeatureReader>();
+
+        // Cross-service account-status enforcement (spec 03 §7.4).
+        services.AddMemoryCache();
+        services.AddScoped<Common.Application.Interfaces.IAccountOperationalStatusReader, AccountOperationalStatusReader>();
+        services.AddScoped<Common.Application.Interfaces.IAccountOperationalStatusService, Common.Application.Services.CachedAccountOperationalStatusService>();
 
         return services;
     }

@@ -13,7 +13,7 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Manager.Infrastructure.ManagerDB.Entities;
+namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Entities;
 
 /// <summary>
 /// Entity representing a geofence entry or exit event.
@@ -21,21 +21,18 @@ namespace TrackHub.Manager.Infrastructure.ManagerDB.Entities;
 public class GeofenceEvent(
     Guid transporterId,
     Guid geofenceId,
-    DateTime dateTime,
-    TimeSpan offset,
+    DateTimeOffset eventDateTime,
     double latitude,
     double longitude)
 {
     public Guid GeofenceEventId { get; private set; } = Guid.NewGuid();
     public Guid TransporterId { get; set; } = transporterId;
     public Guid GeofenceId { get; set; } = geofenceId;
-    public DateTime DateTime { get; set; } = dateTime;
-    public TimeSpan Offset { get; set; } = offset;
+    public DateTimeOffset EventDateTime { get; set; } = eventDateTime;
     /// <summary>
     /// Exit timestamp (null if still inside geofence).
     /// </summary>
-    public DateTime? DepartureTimestamp { get; set; }
-    public TimeSpan? DepartureOffset { get; set; }
+    public DateTimeOffset? DepartureTimestamp { get; set; }
     /// <summary>
     /// Entry location.
     /// </summary>

@@ -14,9 +14,9 @@
 //
 
 using FluentValidation.TestHelper;
-using TrackHub.Manager.Application.Geofences.Commands.Create;
-using TrackHub.Manager.Domain.Models;
-using TrackHub.Manager.Domain.Records;
+using TrackHub.Geofencing.Application.Geofences.Commands.Create;
+using TrackHub.Geofencing.Domain.Models;
+using TrackHub.Geofencing.Domain.Records;
 
 namespace Application.UnitTests.Geofences;
 

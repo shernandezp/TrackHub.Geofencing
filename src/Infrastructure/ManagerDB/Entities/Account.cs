@@ -13,10 +13,12 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Geofencing.Domain.Interfaces;
+namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Entities;
 
-public interface ITransportersInGeofence
+// Read-only scoping entity: Geofencing maps a minimal projection of the Manager-owned app.accounts
+// table for cross-service account-status enforcement (spec 03 §7.4). It never writes it.
+public sealed class Account
 {
-    Task<IReadOnlyCollection<TransporterInGeofenceVm>> GetTransportersInGeofencesAsync(Guid accountId, Guid userId, CancellationToken cancellationToken);
+    public Guid AccountId { get; set; }
+    public short Status { get; set; }
 }
-

@@ -15,7 +15,7 @@
 
 using HotChocolate;
 
-namespace TrackHub.Manager.Infrastructure.Readers;
+namespace TrackHub.Geofencing.Infrastructure.Readers;
 
 public sealed class AccountFeatureReader(IApplicationDbContext context) : IAccountFeatureReader
 {

@@ -1,10 +1,10 @@
-using TrackHub.Manager.Application.Geofences.Commands.Update;
-using TrackHub.Manager.Domain.Interfaces;
+using TrackHub.Geofencing.Application.Geofences.Commands.Update;
+using TrackHub.Geofencing.Domain.Interfaces;
 using Common.Application.Exceptions;
 using Common.Application.Interfaces;
-using TrackHub.Manager.Domain.Records;
+using TrackHub.Geofencing.Domain.Records;
 
-namespace TrackHub.Manager.Application.UnitTests.Geofences.Commands.Update;
+namespace TrackHub.Geofencing.Application.UnitTests.Geofences.Commands.Update;
 
 [TestFixture]
 public class UpdateGeofenceCommandHandlerTests

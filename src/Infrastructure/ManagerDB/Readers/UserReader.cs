@@ -13,7 +13,7 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Manager.Infrastructure.ManagerDB.Readers;
+namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Readers;
 
 // This class represents a reader for retrieving user data from the database.
 public sealed class UserReader(IApplicationDbContext context) : IUserReader

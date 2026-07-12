@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>TrackHub.Manager.Infrastructure</RootNamespace>
-    <AssemblyName>TrackHub.Manager.Infrastructure</AssemblyName>
+    <RootNamespace>TrackHub.Geofencing.Infrastructure</RootNamespace>
+    <AssemblyName>TrackHub.Geofencing.Infrastructure</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" />
