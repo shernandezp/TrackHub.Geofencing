@@ -13,20 +13,11 @@
 //  limitations under the License.
 //
 
-using TrackHub.Geofencing.Application.Geofences.Commands;
-using TrackHub.Geofencing.Application.Geofences.Commands.Update;
+namespace TrackHub.Geofencing.Domain.Models;
 
-namespace TrackHub.Geofencing.Application.Transporters.Commands.Update;
-
-public sealed class UpdateGeofenceValidator : AbstractValidator<UpdateGeofenceCommand>
-{
-    public UpdateGeofenceValidator()
-    {
-        RuleFor(v => v.Geofence)
-            .NotEmpty()
-            .SetValidator(new GeofenceDtoValidator());
-
-        RuleFor(v => v.Geofence.GeofenceId)
-            .NotEmpty();
-    }
-}
+/// <summary>
+/// Server-side page of geofence events plus the unpaged total for pagination controls.
+/// </summary>
+public readonly record struct GeofenceEventsPageVm(
+    IReadOnlyCollection<GeofenceEventReportVm> Items,
+    int TotalCount);

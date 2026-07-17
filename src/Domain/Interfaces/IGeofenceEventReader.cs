@@ -21,18 +21,31 @@ namespace TrackHub.Geofencing.Domain.Interfaces;
 public interface IGeofenceEventReader
 {
     /// <summary>
-    /// Gets open (no departure) geofence events for a transporter.
+    /// Gets open (no departure) geofence events for a transporter within the account.
     /// </summary>
-    Task<IReadOnlyCollection<GeofenceEventVm>> GetOpenEventsForTransporterAsync(Guid transporterId, CancellationToken cancellationToken);
+    Task<IReadOnlyCollection<GeofenceEventVm>> GetOpenEventsForTransporterAsync(Guid transporterId, Guid accountId, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Gets geofence events for reporting, filtered by account, user, date range, and optional transporter.
+    /// Gets a server-side page of geofence events filtered by account, user visibility, date range,
+    /// optional transporter/geofence, and open-visit-only flag.
     /// </summary>
-    Task<IReadOnlyCollection<GeofenceEventReportVm>> GetGeofenceEventsAsync(
+    Task<GeofenceEventsPageVm> GetGeofenceEventsAsync(
         Guid accountId,
         Guid userId,
         DateTimeOffset fromDate,
         DateTimeOffset toDate,
         Guid? transporterId,
+        Guid? geofenceId,
+        bool openOnly,
+        int skip,
+        int take,
+        CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets open visits eligible for a dwell alert: geofence defines a threshold, the account has
+    /// geofencing enabled and is not suspended, and the visit has not been dwell-alerted yet.
+    /// The elapsed-time check against the threshold is the caller's responsibility.
+    /// </summary>
+    Task<IReadOnlyCollection<DwellAlertCandidateVm>> GetDwellAlertCandidatesAsync(
         CancellationToken cancellationToken);
 }

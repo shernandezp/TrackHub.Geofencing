@@ -23,7 +23,7 @@ public partial class Query
     public async Task<GeofenceVm> GetGeofence([Service] ISender sender, [AsParameters] GetGeofenceQuery query)
         => await sender.Send(query);
 
-    public async Task<IReadOnlyCollection<GeofenceVm>> GetGeofencesByAccount([Service] ISender sender, [AsParameters] GetGeofencesByAccountQuery query)
+    public async Task<GeofencesPageVm> GetGeofencesByAccount([Service] ISender sender, [AsParameters] GetGeofencesByAccountQuery query)
         => await sender.Send(query);
 
 }

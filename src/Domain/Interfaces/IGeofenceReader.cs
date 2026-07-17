@@ -18,8 +18,27 @@ namespace TrackHub.Geofencing.Domain.Interfaces;
 public interface IGeofenceReader
 {
     Task<GeofenceVm> GetGeofenceAsync(Guid id, CancellationToken cancellationToken);
-    Task<IReadOnlyCollection<GeofenceVm>> GetGeofencesAsync(Guid accountId, CancellationToken cancellationToken);
-    
+
+    /// <summary>
+    /// Gets a server-side page of the account's geofences with optional type/active/name filters.
+    /// </summary>
+    Task<GeofencesPageVm> GetGeofencesPageAsync(
+        Guid accountId,
+        int skip,
+        int take,
+        short? type,
+        bool? active,
+        string? search,
+        CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets alert opt-in metadata (name, type, entry/exit flags) for the account's active geofences.
+    /// </summary>
+    Task<IReadOnlyDictionary<Guid, GeofenceAlertInfoVm>> GetActiveGeofenceAlertInfoAsync(
+        Guid accountId,
+        CancellationToken cancellationToken);
+
+
     /// <summary>
     /// Gets the IDs of all active geofences that contain the specified point.
     /// Uses spatial indexing for efficient lookup.

@@ -38,9 +38,9 @@ public class UpdateGeofenceCommandHandlerTests
     public async Task Handle_ShouldCallUpdateOnWriter()
     {
         // Arrange
-        var dto = new GeofenceDto(Guid.NewGuid(), default!, "name", null, 1, 1, true);
+        var dto = new GeofenceDto(Guid.NewGuid(), null, "name", null, 1, 1, true, null, null, false, false, null);
         _readerMock.Setup(r => r.GetGeofenceAsync(dto.GeofenceId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new GeofenceVm(dto.GeofenceId, _accountId, default!, "existing", null, 1, 1, true));
+            .ReturnsAsync(new GeofenceVm(dto.GeofenceId, _accountId, default!, "existing", null, 1, 1, true, null, null, false, false, null));
         _writerMock.Setup(w => w.UpdateGeofenceAsync(dto, It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
         var handler = new UpdateGeofenceCommandHandler(_writerMock.Object, _readerMock.Object, _userReaderMock.Object, _userMock.Object, _featureReaderMock.Object);
@@ -57,9 +57,9 @@ public class UpdateGeofenceCommandHandlerTests
     [Test]
     public void Handle_ShouldThrowForbiddenAccessException_WhenAccountDoesNotMatch()
     {
-        var dto = new GeofenceDto(Guid.NewGuid(), default!, "name", null, 1, 1, true);
+        var dto = new GeofenceDto(Guid.NewGuid(), null, "name", null, 1, 1, true, null, null, false, false, null);
         _readerMock.Setup(r => r.GetGeofenceAsync(dto.GeofenceId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new GeofenceVm(dto.GeofenceId, Guid.NewGuid(), default!, "existing", null, 1, 1, true));
+            .ReturnsAsync(new GeofenceVm(dto.GeofenceId, Guid.NewGuid(), default!, "existing", null, 1, 1, true, null, null, false, false, null));
 
         var handler = new UpdateGeofenceCommandHandler(_writerMock.Object, _readerMock.Object, _userReaderMock.Object, _userMock.Object, _featureReaderMock.Object);
 

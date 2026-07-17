@@ -13,20 +13,15 @@
 //  limitations under the License.
 //
 
-using TrackHub.Geofencing.Application.Geofences.Commands;
-using TrackHub.Geofencing.Application.Geofences.Commands.Update;
+namespace TrackHub.Geofencing.Application.GeofenceEvents.Services.Interfaces;
 
-namespace TrackHub.Geofencing.Application.Transporters.Commands.Update;
-
-public sealed class UpdateGeofenceValidator : AbstractValidator<UpdateGeofenceCommand>
+/// <summary>
+/// Evaluates open visits against per-geofence dwell thresholds and emits one-time dwell alerts.
+/// </summary>
+public interface IDwellEvaluationService
 {
-    public UpdateGeofenceValidator()
-    {
-        RuleFor(v => v.Geofence)
-            .NotEmpty()
-            .SetValidator(new GeofenceDtoValidator());
-
-        RuleFor(v => v.Geofence.GeofenceId)
-            .NotEmpty();
-    }
+    /// <summary>
+    /// Runs one evaluation cycle and returns the number of dwell alerts emitted.
+    /// </summary>
+    Task<int> EvaluateDwellAsync(CancellationToken cancellationToken);
 }

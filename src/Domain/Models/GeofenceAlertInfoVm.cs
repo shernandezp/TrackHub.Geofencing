@@ -13,20 +13,14 @@
 //  limitations under the License.
 //
 
-using TrackHub.Geofencing.Application.Geofences.Commands;
-using TrackHub.Geofencing.Application.Geofences.Commands.Update;
+namespace TrackHub.Geofencing.Domain.Models;
 
-namespace TrackHub.Geofencing.Application.Transporters.Commands.Update;
-
-public sealed class UpdateGeofenceValidator : AbstractValidator<UpdateGeofenceCommand>
-{
-    public UpdateGeofenceValidator()
-    {
-        RuleFor(v => v.Geofence)
-            .NotEmpty()
-            .SetValidator(new GeofenceDtoValidator());
-
-        RuleFor(v => v.Geofence.GeofenceId)
-            .NotEmpty();
-    }
-}
+/// <summary>
+/// Per-geofence alert opt-in metadata used by detection when emitting alert events.
+/// </summary>
+public readonly record struct GeofenceAlertInfoVm(
+    Guid GeofenceId,
+    string Name,
+    short Type,
+    bool AlertOnEntry,
+    bool AlertOnExit);

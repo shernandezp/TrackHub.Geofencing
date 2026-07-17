@@ -13,20 +13,19 @@
 //  limitations under the License.
 //
 
-using TrackHub.Geofencing.Application.Geofences.Commands;
-using TrackHub.Geofencing.Application.Geofences.Commands.Update;
+namespace TrackHub.Geofencing.Domain.Interfaces;
 
-namespace TrackHub.Geofencing.Application.Transporters.Commands.Update;
-
-public sealed class UpdateGeofenceValidator : AbstractValidator<UpdateGeofenceCommand>
+/// <summary>
+/// Records background job runs in Manager (Geofencing has no local BackgroundJobRun table).
+/// </summary>
+public interface IBackgroundJobRunRecorder
 {
-    public UpdateGeofenceValidator()
-    {
-        RuleFor(v => v.Geofence)
-            .NotEmpty()
-            .SetValidator(new GeofenceDtoValidator());
-
-        RuleFor(v => v.Geofence.GeofenceId)
-            .NotEmpty();
-    }
+    Task RecordAsync(
+        string jobKey,
+        string? resourceKey,
+        string idempotencyKey,
+        string status,
+        DateTimeOffset startedAt,
+        DateTimeOffset? completedAt,
+        CancellationToken cancellationToken);
 }

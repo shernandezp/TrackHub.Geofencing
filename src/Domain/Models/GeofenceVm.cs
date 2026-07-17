@@ -23,6 +23,11 @@ public readonly record struct GeofenceVm(
     string? Description,
     short Color,
     short Type,
-    bool Active
+    bool Active,
+    CoordinateVm? CircleCenter,
+    double? CircleRadiusMeters,
+    bool AlertOnEntry,
+    bool AlertOnExit,
+    int? DwellThresholdMinutes
     );
 

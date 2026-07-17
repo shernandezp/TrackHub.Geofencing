@@ -32,10 +32,12 @@ public class GetTransportersInGeofenceQueryHandlerTests
         _userReaderMock.Setup(r => r.GetUserAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(new UserVm { UserId = userId, Username = "u", AccountId = accountId });
         _featureReaderMock.Setup(r => r.EnsureFeatureEnabledAsync(accountId, FeatureKeys.Geofencing, It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
-        _readerMock.Setup(r => r.GetTransportersInGeofencesAsync(accountId, It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(items);
+        var geofenceId = Guid.NewGuid();
+        short type = 2;
+        _readerMock.Setup(r => r.GetTransportersInGeofencesAsync(accountId, It.IsAny<Guid>(), geofenceId, type, It.IsAny<CancellationToken>())).ReturnsAsync(items);
 
         var handler = new GetTransportersInGeofenceQueryHandler(_readerMock.Object, _userReaderMock.Object, _userMock.Object, _featureReaderMock.Object);
-        var query = new GetTransportersInGeofenceQuery();
+        var query = new GetTransportersInGeofenceQuery(geofenceId, type);
 
         // Act
         var result = await handler.Handle(query, CancellationToken.None);
@@ -44,7 +46,7 @@ public class GetTransportersInGeofenceQueryHandlerTests
         Assert.That(result, Is.EqualTo(items));
         _userReaderMock.Verify(r => r.GetUserAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
         _featureReaderMock.Verify(r => r.EnsureFeatureEnabledAsync(accountId, FeatureKeys.Geofencing, It.IsAny<CancellationToken>()), Times.Once);
-        _readerMock.Verify(r => r.GetTransportersInGeofencesAsync(accountId, It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
+        _readerMock.Verify(r => r.GetTransportersInGeofencesAsync(accountId, It.IsAny<Guid>(), geofenceId, type, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Test]

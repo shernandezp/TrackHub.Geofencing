@@ -18,11 +18,13 @@ namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Readers;
 public sealed class TransportersInGeofence(IApplicationDbContext context) : ITransportersInGeofence
 {
 
-    public async Task<IReadOnlyCollection<TransporterInGeofenceVm>> GetTransportersInGeofencesAsync(Guid accountId, Guid userId, CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<TransporterInGeofenceVm>> GetTransportersInGeofencesAsync(Guid accountId, Guid userId, Guid? geofenceId, short? type, CancellationToken cancellationToken)
     {
         var query = from geofence in context.Geofences
                     from transporter in context.Transporters
                     where geofence.AccountId == accountId && geofence.Active && transporter.UserId == userId
+                    where geofenceId == null || geofence.GeofenceId == geofenceId
+                    where type == null || geofence.Type == type
                     where geofence.Geom.Intersects(transporter.Geom)
                     select new TransporterInGeofenceVm
                     {

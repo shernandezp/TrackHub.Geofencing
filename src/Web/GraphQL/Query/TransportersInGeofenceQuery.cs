@@ -20,8 +20,13 @@ namespace TrackHub.Geofencing.Web.GraphQL.Query;
 public partial class Query
 {
 
-    public async Task<IReadOnlyCollection<TransporterInGeofenceVm>> GetTransportersInGeofence([Service] ISender sender)
-        => await sender.Send(new GetTransportersInGeofenceQuery());
+    // Filters stay as plain optional arguments (not an [AsParameters] input object) so the
+    // existing no-argument documents from Reporting and the portal remain valid.
+    public async Task<IReadOnlyCollection<TransporterInGeofenceVm>> GetTransportersInGeofence(
+        [Service] ISender sender,
+        Guid? geofenceId = null,
+        short? type = null)
+        => await sender.Send(new GetTransportersInGeofenceQuery(geofenceId, type));
 
 }
 

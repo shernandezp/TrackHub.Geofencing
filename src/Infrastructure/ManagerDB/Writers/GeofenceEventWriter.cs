@@ -17,7 +17,7 @@ namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Writers;
 
 public sealed class GeofenceEventWriter(IApplicationDbContext context) : IGeofenceEventWriter
 {
-    public async Task<GeofenceEventVm> CreateEntryEventAsync(
+    public async Task<GeofenceEventVm?> CreateEntryEventAsync(
         GeofenceEventDto geofenceEvent,
         CancellationToken cancellationToken)
     {
@@ -25,9 +25,21 @@ public sealed class GeofenceEventWriter(IApplicationDbContext context) : IGeofen
             .FirstOrDefaultAsync(g => g.GeofenceId == geofenceEvent.GeofenceId, cancellationToken)
             ?? throw new KeyNotFoundException($"Geofence with ID {geofenceEvent.GeofenceId} not found.");
 
+        // Redelivery guard: identical device timestamps only occur when a batch is processed
+        // again. The open-visit cache dedupes still-open visits; this catches the case where
+        // the visit already COMPLETED (entry + exit in the redelivered batch) and would
+        // otherwise be recorded twice.
+        var duplicate = await context.GeofenceEvents.AnyAsync(e =>
+            e.TransporterId == geofenceEvent.TransporterId
+            && e.GeofenceId == geofenceEvent.GeofenceId
+            && e.EventDateTime == geofenceEvent.EventDateTime, cancellationToken);
+        if (duplicate)
+            return null;
+
         var evt = new GeofenceEvent(
             geofenceEvent.TransporterId,
             geofenceEvent.GeofenceId,
+            geofenceEvent.AccountId,
             geofenceEvent.EventDateTime,
             geofenceEvent.Latitude,
             geofenceEvent.Longitude);
@@ -35,17 +47,10 @@ public sealed class GeofenceEventWriter(IApplicationDbContext context) : IGeofen
         await context.GeofenceEvents.AddAsync(evt, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 
-        return new GeofenceEventVm(
-            evt.GeofenceEventId,
-            evt.TransporterId,
-            evt.GeofenceId,
-            evt.EventDateTime,
-            evt.DepartureTimestamp,
-            evt.Latitude,
-            evt.Longitude);
+        return CastVm(evt);
     }
 
-    public async Task UpdateExitEventAsync(
+    public async Task<GeofenceEventVm> UpdateExitEventAsync(
         Guid geofenceEventId,
         DateTimeOffset departureTimestamp,
         CancellationToken cancellationToken)
@@ -57,5 +62,30 @@ public sealed class GeofenceEventWriter(IApplicationDbContext context) : IGeofen
 
         evt.DepartureTimestamp = departureTimestamp;
         await context.SaveChangesAsync(cancellationToken);
+
+        return CastVm(evt);
     }
+
+    public async Task StampDwellAlertedAsync(
+        Guid geofenceEventId,
+        DateTimeOffset alertedAt,
+        CancellationToken cancellationToken)
+    {
+        var evt = await context.GeofenceEvents.FindAsync([geofenceEventId], cancellationToken)
+            ?? throw new KeyNotFoundException($"GeofenceEvent with ID {geofenceEventId} not found.");
+
+        context.GeofenceEvents.Attach(evt);
+
+        evt.DwellAlertedAt = alertedAt;
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    private static GeofenceEventVm CastVm(GeofenceEvent evt)
+        => new(evt.GeofenceEventId,
+            evt.TransporterId,
+            evt.GeofenceId,
+            evt.EventDateTime,
+            evt.DepartureTimestamp,
+            evt.Latitude,
+            evt.Longitude);
 }

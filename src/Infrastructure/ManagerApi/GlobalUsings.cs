@@ -13,20 +13,9 @@
 //  limitations under the License.
 //
 
-using TrackHub.Geofencing.Application.Geofences.Commands;
-using TrackHub.Geofencing.Application.Geofences.Commands.Update;
-
-namespace TrackHub.Geofencing.Application.Transporters.Commands.Update;
-
-public sealed class UpdateGeofenceValidator : AbstractValidator<UpdateGeofenceCommand>
-{
-    public UpdateGeofenceValidator()
-    {
-        RuleFor(v => v.Geofence)
-            .NotEmpty()
-            .SetValidator(new GeofenceDtoValidator());
-
-        RuleFor(v => v.Geofence.GeofenceId)
-            .NotEmpty();
-    }
-}
+global using Common.Application.Interfaces;
+global using Common.Domain.Constants;
+global using Common.Infrastructure;
+global using GraphQL;
+global using TrackHub.Geofencing.Domain.Interfaces;
+global using TrackHub.Geofencing.Domain.Records;

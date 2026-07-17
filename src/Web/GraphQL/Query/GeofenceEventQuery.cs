@@ -20,7 +20,7 @@ namespace TrackHub.Geofencing.Web.GraphQL.Query;
 public partial class Query
 {
 
-    public async Task<IReadOnlyCollection<GeofenceEventReportVm>> GetGeofenceEvents(
+    public async Task<GeofenceEventsPageVm> GetGeofenceEvents(
         [Service] ISender sender,
         [AsParameters] GetGeofenceEventsQuery query)
         => await sender.Send(query);

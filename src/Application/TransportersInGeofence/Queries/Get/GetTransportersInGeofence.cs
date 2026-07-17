@@ -18,18 +18,19 @@ using Common.Application.Interfaces;
 namespace TrackHub.Geofencing.Application.TransportersInGeofence.Queries.Get;
 
 [Authorize(Resource = Resources.Geofencing, Action = Actions.Read)]
-public readonly record struct GetTransportersInGeofenceQuery() : IRequest<IReadOnlyCollection<TransporterInGeofenceVm>>;
+public readonly record struct GetTransportersInGeofenceQuery(
+    Guid? GeofenceId,
+    short? Type) : IRequest<IReadOnlyCollection<TransporterInGeofenceVm>>;
 
 public class GetTransportersInGeofenceQueryHandler(ITransportersInGeofence reader, IUserReader userReader, IUser user, IAccountFeatureReader accountFeatureReader) : IRequestHandler<GetTransportersInGeofenceQuery, IReadOnlyCollection<TransporterInGeofenceVm>>
 {
     private Guid UserId { get; } = Guid.TryParse(user.Id, out var userId) ? userId : throw new UnauthorizedAccessException();
 
     public async Task<IReadOnlyCollection<TransporterInGeofenceVm>> Handle(GetTransportersInGeofenceQuery request, CancellationToken cancellationToken)
-    { 
+    {
         var user = await userReader.GetUserAsync(UserId, cancellationToken);
         await accountFeatureReader.EnsureFeatureEnabledAsync(user.AccountId, FeatureKeys.Geofencing, cancellationToken);
-        return await reader.GetTransportersInGeofencesAsync(user.AccountId, UserId, cancellationToken);
+        return await reader.GetTransportersInGeofencesAsync(user.AccountId, UserId, request.GeofenceId, request.Type, cancellationToken);
     }
 
 }
-

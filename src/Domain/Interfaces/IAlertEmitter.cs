@@ -13,20 +13,17 @@
 //  limitations under the License.
 //
 
-using TrackHub.Geofencing.Application.Geofences.Commands;
-using TrackHub.Geofencing.Application.Geofences.Commands.Update;
+using TrackHub.Geofencing.Domain.Records;
 
-namespace TrackHub.Geofencing.Application.Transporters.Commands.Update;
+namespace TrackHub.Geofencing.Domain.Interfaces;
 
-public sealed class UpdateGeofenceValidator : AbstractValidator<UpdateGeofenceCommand>
+/// <summary>
+/// Emits geofence alert events toward the Manager alert pipeline (spec 05).
+/// Emission is best-effort: callers must never fail position processing on emitter errors.
+/// </summary>
+public interface IAlertEmitter
 {
-    public UpdateGeofenceValidator()
-    {
-        RuleFor(v => v.Geofence)
-            .NotEmpty()
-            .SetValidator(new GeofenceDtoValidator());
-
-        RuleFor(v => v.Geofence.GeofenceId)
-            .NotEmpty();
-    }
+    Task EmitGeofenceEnteredAsync(GeofenceAlertDto alert, CancellationToken cancellationToken);
+    Task EmitGeofenceExitedAsync(GeofenceAlertDto alert, CancellationToken cancellationToken);
+    Task EmitGeofenceDwellExceededAsync(GeofenceAlertDto alert, CancellationToken cancellationToken);
 }

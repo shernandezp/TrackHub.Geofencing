@@ -13,6 +13,7 @@
 //  limitations under the License.
 //
 
+using Microsoft.Extensions.Logging;
 using TrackHub.Geofencing.Application.GeofenceEvents.Services.Interfaces;
 
 namespace TrackHub.Geofencing.Application.GeofenceEvents.Services;
@@ -23,7 +24,9 @@ namespace TrackHub.Geofencing.Application.GeofenceEvents.Services;
 public class GeofenceDetectionService(
     IGeofenceReader geofenceReader,
     IGeofenceEventReader geofenceEventReader,
-    IGeofenceEventWriter geofenceEventWriter) : IGeofenceDetectionService
+    IGeofenceEventWriter geofenceEventWriter,
+    IAlertEmitter alertEmitter,
+    ILogger<GeofenceDetectionService> logger) : IGeofenceDetectionService
 {
     private static readonly TimeSpan MinEventInterval = TimeSpan.FromSeconds(30);
 
@@ -46,13 +49,15 @@ public class GeofenceDetectionService(
 
         foreach (var transporterId in transporterIds)
         {
-            var openEvents = await geofenceEventReader.GetOpenEventsForTransporterAsync(transporterId, cancellationToken);
+            var openEvents = await geofenceEventReader.GetOpenEventsForTransporterAsync(transporterId, accountId, cancellationToken);
             openEventsByTransporter[transporterId] = openEvents.ToDictionary(e => e.GeofenceId);
         }
 
         // Process positions and accumulate results
         var eventsCreated = 0;
         var eventsUpdated = 0;
+        var entries = new List<GeofenceEventVm>();
+        var exits = new List<GeofenceEventVm>();
 
         foreach (var transporterPositions in positionsList.GroupBy(p => p.TransporterId))
         {
@@ -61,13 +66,18 @@ public class GeofenceDetectionService(
 
             foreach (var position in transporterPositions)
             {
-                var (created, updated, events) = await ProcessPositionAsync(
-                    position, accountId, openEvents, cancellationToken);
+                var (created, updated) = await ProcessPositionAsync(
+                    position, accountId, openEvents, entries, exits, cancellationToken);
 
                 eventsCreated += created;
                 eventsUpdated += updated;
             }
         }
+
+        // Post-commit, best-effort alert emission (spec 08 §7.2): failures are logged and never
+        // fail position processing; Manager-side AlertEvent dedup makes retries safe.
+        if (entries.Count > 0 || exits.Count > 0)
+            await EmitAlertsAsync(accountId, entries, exits, cancellationToken);
 
         return new GeofenceProcessingResultVm(
             positionsList.Count,
@@ -75,15 +85,16 @@ public class GeofenceDetectionService(
             eventsUpdated);
     }
 
-    private async Task<(int Created, int Updated, List<GeofenceEventVm> Events)> ProcessPositionAsync(
+    private async Task<(int Created, int Updated)> ProcessPositionAsync(
         TransporterPositionDto position,
         Guid accountId,
         Dictionary<Guid, GeofenceEventVm> openEvents,
+        List<GeofenceEventVm> entries,
+        List<GeofenceEventVm> exits,
         CancellationToken cancellationToken)
     {
         var created = 0;
         var updated = 0;
-        var events = new List<GeofenceEventVm>();
 
         // Use spatial query to find geofences containing this point (uses PostGIS ST_Contains)
         var containingGeofenceIds = await geofenceReader.GetGeofenceIdsContainingPointAsync(
@@ -96,27 +107,23 @@ public class GeofenceDetectionService(
             if (openEvents.ContainsKey(geofenceId))
                 continue;
 
-            // Debounce check
-            if (openEvents.TryGetValue(geofenceId, out var recentEvent) &&
-                recentEvent.DepartureTimestamp.HasValue &&
-                (position.DeviceDateTime - recentEvent.DepartureTimestamp.Value) < MinEventInterval)
-            {
-                continue;
-            }
-
-            // Create entry event
+            // Create entry event; null = the visit already exists (redelivered batch) and
+            // must not be counted, tracked, or re-alerted.
             var newEvent = await geofenceEventWriter.CreateEntryEventAsync(
                 new GeofenceEventDto(
                     position.TransporterId,
                     geofenceId,
+                    accountId,
                     position.DeviceDateTime,
                     position.Latitude,
                     position.Longitude),
                 cancellationToken);
+            if (newEvent is not { } createdEvent)
+                continue;
 
             created++;
-            events.Add(newEvent);
-            openEvents[geofenceId] = newEvent;
+            entries.Add(createdEvent);
+            openEvents[geofenceId] = createdEvent;
         }
 
         // Process exits (has open event but not in geofence)
@@ -132,15 +139,84 @@ public class GeofenceDetectionService(
             if ((position.DeviceDateTime - openEvent.Timestamp) < MinEventInterval)
                 continue;
 
-            await geofenceEventWriter.UpdateExitEventAsync(
+            var closedEvent = await geofenceEventWriter.UpdateExitEventAsync(
                 openEvent.GeofenceEventId,
                 position.DeviceDateTime,
                 cancellationToken);
 
             updated++;
+            exits.Add(closedEvent);
             openEvents.Remove(geofenceId);
         }
 
-        return (created, updated, events);
+        return (created, updated);
     }
+
+    private async Task EmitAlertsAsync(
+        Guid accountId,
+        IReadOnlyCollection<GeofenceEventVm> entries,
+        IReadOnlyCollection<GeofenceEventVm> exits,
+        CancellationToken cancellationToken)
+    {
+        IReadOnlyDictionary<Guid, GeofenceAlertInfoVm> alertInfo;
+        try
+        {
+            alertInfo = await geofenceReader.GetActiveGeofenceAlertInfoAsync(accountId, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to load geofence alert metadata for account {AccountId}; skipping alert emission for this batch", accountId);
+            return;
+        }
+
+        foreach (var entry in entries)
+        {
+            if (!alertInfo.TryGetValue(entry.GeofenceId, out var info) || !info.AlertOnEntry)
+                continue;
+
+            try
+            {
+                await alertEmitter.EmitGeofenceEnteredAsync(ToAlertDto(accountId, entry, info, dwellSeconds: null), cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Failed to emit GeofenceEntered alert for event {GeofenceEventId}", entry.GeofenceEventId);
+            }
+        }
+
+        foreach (var exit in exits)
+        {
+            if (!alertInfo.TryGetValue(exit.GeofenceId, out var info) || !info.AlertOnExit)
+                continue;
+
+            try
+            {
+                var dwellSeconds = exit.DepartureTimestamp is null
+                    ? (long?)null
+                    : (long)(exit.DepartureTimestamp.Value - exit.Timestamp).TotalSeconds;
+                await alertEmitter.EmitGeofenceExitedAsync(ToAlertDto(accountId, exit, info, dwellSeconds), cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Failed to emit GeofenceExited alert for event {GeofenceEventId}", exit.GeofenceEventId);
+            }
+        }
+    }
+
+    private static GeofenceAlertDto ToAlertDto(
+        Guid accountId,
+        GeofenceEventVm evt,
+        GeofenceAlertInfoVm info,
+        long? dwellSeconds)
+        => new(evt.GeofenceEventId,
+            accountId,
+            evt.TransporterId,
+            evt.GeofenceId,
+            info.Name,
+            info.Type,
+            evt.Timestamp,
+            evt.DepartureTimestamp,
+            dwellSeconds,
+            evt.Latitude,
+            evt.Longitude);
 }

@@ -13,20 +13,20 @@
 //  limitations under the License.
 //
 
-using TrackHub.Geofencing.Application.Geofences.Commands;
-using TrackHub.Geofencing.Application.Geofences.Commands.Update;
+namespace TrackHub.Geofencing.Domain.Records;
 
-namespace TrackHub.Geofencing.Application.Transporters.Commands.Update;
-
-public sealed class UpdateGeofenceValidator : AbstractValidator<UpdateGeofenceCommand>
-{
-    public UpdateGeofenceValidator()
-    {
-        RuleFor(v => v.Geofence)
-            .NotEmpty()
-            .SetValidator(new GeofenceDtoValidator());
-
-        RuleFor(v => v.Geofence.GeofenceId)
-            .NotEmpty();
-    }
-}
+/// <summary>
+/// Payload for a geofence alert event emitted toward the Manager alert pipeline (spec 05).
+/// </summary>
+public readonly record struct GeofenceAlertDto(
+    Guid GeofenceEventId,
+    Guid AccountId,
+    Guid TransporterId,
+    Guid GeofenceId,
+    string GeofenceName,
+    short GeofenceType,
+    DateTimeOffset EnteredAt,
+    DateTimeOffset? ExitedAt,
+    long? DwellSeconds,
+    double Latitude,
+    double Longitude);

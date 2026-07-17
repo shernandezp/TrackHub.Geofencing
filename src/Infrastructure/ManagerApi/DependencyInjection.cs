@@ -13,26 +13,22 @@
 //  limitations under the License.
 //
 
-using System.Reflection;
-using Common.Application;
-using TrackHub.Geofencing.Application.GeofenceEvents.Services;
-using TrackHub.Geofencing.Application.GeofenceEvents.Services.Interfaces;
+using TrackHub.Geofencing.Infrastructure.ManagerApi;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+    public static IServiceCollection AddManagerApiContext(this IServiceCollection services)
     {
-        var assembly = Assembly.GetExecutingAssembly();
-        services.AddApplicationServices(assembly);
-        services.AddDistributedMemoryCache();
-        
-        // Register geofence detection service
-        services.AddScoped<IGeofenceDetectionService, GeofenceDetectionService>();
-        services.AddScoped<IDwellEvaluationService, DwellEvaluationService>();
+        // Alert emission and job-run recording always run under the service's own
+        // geofence_client identity (client credentials), never the caller's token —
+        // the dwell evaluator has no incoming request at all.
+        services.AddGraphQLServiceClient(Clients.Manager);
+
+        services.AddScoped<IAlertEmitter, AlertEmitter>();
+        services.AddScoped<IBackgroundJobRunRecorder, BackgroundJobRunRecorder>();
 
         return services;
     }
 }
-

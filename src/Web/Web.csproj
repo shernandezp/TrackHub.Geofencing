@@ -5,6 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
+    <ProjectReference Include="..\Infrastructure\ManagerApi\ManagerApi.csproj" />
     <ProjectReference Include="..\Infrastructure\ManagerDB\ManagerDB.csproj" />
   </ItemGroup>
   <ItemGroup>

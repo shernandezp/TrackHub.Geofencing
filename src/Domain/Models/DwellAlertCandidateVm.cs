@@ -13,20 +13,19 @@
 //  limitations under the License.
 //
 
-using TrackHub.Geofencing.Application.Geofences.Commands;
-using TrackHub.Geofencing.Application.Geofences.Commands.Update;
+namespace TrackHub.Geofencing.Domain.Models;
 
-namespace TrackHub.Geofencing.Application.Transporters.Commands.Update;
-
-public sealed class UpdateGeofenceValidator : AbstractValidator<UpdateGeofenceCommand>
-{
-    public UpdateGeofenceValidator()
-    {
-        RuleFor(v => v.Geofence)
-            .NotEmpty()
-            .SetValidator(new GeofenceDtoValidator());
-
-        RuleFor(v => v.Geofence.GeofenceId)
-            .NotEmpty();
-    }
-}
+/// <summary>
+/// Open visit whose geofence defines a dwell threshold and that has not been dwell-alerted yet.
+/// </summary>
+public readonly record struct DwellAlertCandidateVm(
+    Guid GeofenceEventId,
+    Guid AccountId,
+    Guid TransporterId,
+    Guid GeofenceId,
+    string GeofenceName,
+    short GeofenceType,
+    DateTimeOffset EventDateTime,
+    double Latitude,
+    double Longitude,
+    int DwellThresholdMinutes);
