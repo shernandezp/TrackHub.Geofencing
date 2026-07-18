@@ -60,7 +60,7 @@ public class GetGeofenceEventsQueryHandler(IGeofenceEventReader reader, IUserRea
 
 public sealed class GetGeofenceEventsValidator : AbstractValidator<GetGeofenceEventsQuery>
 {
-    // Bounded window keeps the event query from scanning unbounded history (spec 08 §7.1).
+    // Bounded window keeps the event query from scanning unbounded history.
     public const int MaxWindowDays = 92;
 
     public GetGeofenceEventsValidator()

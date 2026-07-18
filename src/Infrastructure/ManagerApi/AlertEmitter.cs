@@ -20,7 +20,7 @@ namespace TrackHub.Geofencing.Infrastructure.ManagerApi;
 /// <summary>
 /// Emits geofence alert events to Manager's <c>recordAlertEvent</c> under the service's own
 /// <c>geofence_client</c> identity (never the caller's token). Event-type and severity literals
-/// match Manager's AlertEventTypes/AlertSeverities catalogs (spec 05).
+/// match Manager's AlertEventTypes/AlertSeverities catalogs.
 /// </summary>
 public class AlertEmitter(IGraphQLClientFactory graphQLClient)
     : GraphQLService(graphQLClient.CreateClient(Clients.Manager, asService: true)), IAlertEmitter

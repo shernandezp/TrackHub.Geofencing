@@ -84,7 +84,7 @@ public sealed class GeofenceWriter(IApplicationDbContext context, IUser user) : 
 
         // Visit rows reference the geofence with DeleteBehavior.Restrict — without this check
         // the delete dies in SaveChanges as a masked execution error. History is deliberately
-        // preserved (spec 08): deactivation is the supported way to retire a zone.
+        // preserved: deactivation is the supported way to retire a zone.
         var hasVisits = await context.GeofenceEvents
             .AnyAsync(e => e.GeofenceId == geofenceId, cancellationToken);
         if (hasVisits)

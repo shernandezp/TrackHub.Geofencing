@@ -22,7 +22,7 @@ public class AccountFeatureConfiguration : IEntityTypeConfiguration<AccountFeatu
 {
     public void Configure(EntityTypeBuilder<AccountFeature> builder)
     {
-        // Manager-owned table (SVD-05): read-only here, never part of this repo's migrations
+        // Manager-owned table: read-only here, never part of this repo's migrations
         builder.ToTable(name: TableMetadata.AccountFeature, schema: SchemaMetadata.Application, t => t.ExcludeFromMigrations());
         builder.Property(x => x.AccountFeatureId).HasColumnName("id");
         builder.Property(x => x.AccountId).HasColumnName("accountid");

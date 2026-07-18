@@ -34,7 +34,7 @@ builder.Services.AddManagerApiContext();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddWebServices();
 
-// Dwell-threshold evaluation (spec 08): the module's only hosted job.
+// Dwell-threshold evaluation: the module's only hosted job.
 builder.Services.AddHostedService<GeofenceDwellEvaluationService>();
 
 // Add HealthChecks

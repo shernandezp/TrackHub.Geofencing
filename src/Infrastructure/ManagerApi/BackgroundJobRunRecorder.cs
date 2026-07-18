@@ -17,7 +17,7 @@ namespace TrackHub.Geofencing.Infrastructure.ManagerApi;
 
 /// <summary>
 /// Records background job runs via Manager's <c>createBackgroundJobRun</c> under the
-/// <c>geofence_client</c> identity (Geofencing has no local BackgroundJobRun table; spec 08 §7.2).
+/// <c>geofence_client</c> identity (Geofencing has no local BackgroundJobRun table).
 /// </summary>
 public class BackgroundJobRunRecorder(IGraphQLClientFactory graphQLClient)
     : GraphQLService(graphQLClient.CreateClient(Clients.Manager, asService: true)), IBackgroundJobRunRecorder

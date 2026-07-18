@@ -22,7 +22,7 @@ public sealed class AccountConfiguration : IEntityTypeConfiguration<Account>
 {
     public void Configure(EntityTypeBuilder<Account> builder)
     {
-        // Manager-owned table (SVD-05): read-only here, never part of this repo's migrations
+        // Manager-owned table: read-only here, never part of this repo's migrations
         builder.ToTable(name: TableMetadata.Account, schema: SchemaMetadata.Application, t => t.ExcludeFromMigrations());
         builder.HasKey(x => x.AccountId);
         builder.Property(x => x.AccountId).HasColumnName("id");

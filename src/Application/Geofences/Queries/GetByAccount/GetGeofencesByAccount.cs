@@ -18,8 +18,8 @@ using Common.Application.Interfaces;
 namespace TrackHub.Geofencing.Application.Geofences.Queries.GetByAccount;
 
 // No [Caching]: the cache key is built from request properties only and this query resolves
-// the account from the caller, so a cached page would be served across accounts (spec 06
-// audit rule: no [Caching] on per-user/per-account queries). EnableCaching stays in the
+// the account from the caller, so a cached page would be served across
+// accounts (never put [Caching] on per-user/per-account queries). EnableCaching stays in the
 // contract for compatibility but is inert.
 [Authorize(Resource = Resources.Geofences, Action = Actions.Read)]
 public readonly record struct GetGeofencesByAccountQuery(

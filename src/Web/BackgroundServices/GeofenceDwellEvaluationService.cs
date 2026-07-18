@@ -18,7 +18,7 @@ using TrackHub.Geofencing.Application.GeofenceEvents.Services.Interfaces;
 namespace TrackHub.Geofencing.Web.BackgroundServices;
 
 /// <summary>
-/// Hosted loop for dwell-threshold evaluation (spec 08 §7.2): dwell alerts are triggered by
+/// Hosted loop for dwell-threshold evaluation: dwell alerts are triggered by
 /// elapsed time, not by new positions, so they cannot ride the SyncWorker-driven detection path.
 /// Scans the open-visit partial index every cycle via <see cref="IDwellEvaluationService"/>.
 /// </summary>

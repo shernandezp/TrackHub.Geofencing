@@ -16,7 +16,7 @@
 namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Entities;
 
 // Read-only scoping entity: Geofencing maps a minimal projection of the Manager-owned app.accounts
-// table for cross-service account-status enforcement (spec 03 §7.4). It never writes it.
+// table for cross-service account-status enforcement. It never writes it.
 public sealed class Account
 {
     public Guid AccountId { get; set; }

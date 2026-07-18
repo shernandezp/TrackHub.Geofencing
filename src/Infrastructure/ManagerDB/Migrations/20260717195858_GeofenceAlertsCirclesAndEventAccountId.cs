@@ -50,7 +50,7 @@ namespace TrackHub.Geofencing.Infrastructure.Migrations
                 nullable: true);
 
             // AccountId lands nullable, is backfilled from the owning geofence in one bounded
-            // UPDATE ... FROM join, and only then becomes NOT NULL (spec 08 §15).
+            // UPDATE... FROM join, and only then becomes NOT NULL.
             migrationBuilder.AddColumn<Guid>(
                 name: "accountid",
                 schema: "geofencing",

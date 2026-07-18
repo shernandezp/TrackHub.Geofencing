@@ -52,7 +52,7 @@ public sealed class GeofenceEventReader(IApplicationDbContext context) : IGeofen
         CancellationToken cancellationToken)
     {
         // No g.Active filter: deactivating a geofence must not erase its recorded visit
-        // history from the event view (spec 08 §4 — administrators read all account events).
+        // history from the event view.
         var query = from evt in context.GeofenceEvents
                     join g in context.Geofences on evt.GeofenceId equals g.GeofenceId
                     join t in context.Transporters on evt.TransporterId equals t.TransporterId

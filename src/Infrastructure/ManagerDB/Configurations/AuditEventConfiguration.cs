@@ -22,7 +22,7 @@ public class AuditEventConfiguration : IEntityTypeConfiguration<AuditEvent>
 {
     public void Configure(EntityTypeBuilder<AuditEvent> builder)
     {
-        // Manager-owned table (SVD-05): never part of this repo's migrations
+        // Manager-owned table: never part of this repo's migrations
         builder.ToTable(name: TableMetadata.AuditEvent, schema: SchemaMetadata.Application, t => t.ExcludeFromMigrations());
         builder.Property(x => x.AuditEventId).HasColumnName("id");
         builder.Property(x => x.AccountId).HasColumnName("accountid");

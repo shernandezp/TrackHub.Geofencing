@@ -74,7 +74,7 @@ public class GeofenceDetectionService(
             }
         }
 
-        // Post-commit, best-effort alert emission (spec 08 §7.2): failures are logged and never
+        // Post-commit, best-effort alert emission: failures are logged and never
         // fail position processing; Manager-side AlertEvent dedup makes retries safe.
         if (entries.Count > 0 || exits.Count > 0)
             await EmitAlertsAsync(accountId, entries, exits, cancellationToken);

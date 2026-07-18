@@ -19,7 +19,7 @@ using TrackHub.Geofencing.Application.GeofenceEvents.Services.Interfaces;
 namespace TrackHub.Geofencing.Application.GeofenceEvents.Services;
 
 /// <summary>
-/// Dwell-threshold evaluation (spec 08 §7.2): scans open visits whose geofence defines a dwell
+/// Dwell-threshold evaluation: scans open visits whose geofence defines a dwell
 /// threshold and emits <c>GeofenceDwellExceeded</c> exactly once per visit. Triggered by elapsed
 /// time, not by new positions, so a silent device still alerts. Emission failures leave the
 /// visit unstamped and it is retried next cycle (Manager-side dedup makes that safe).

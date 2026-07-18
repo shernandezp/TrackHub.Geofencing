@@ -18,7 +18,7 @@ using TrackHub.Geofencing.Domain.Records;
 namespace TrackHub.Geofencing.Domain.Interfaces;
 
 /// <summary>
-/// Emits geofence alert events toward the Manager alert pipeline (spec 05).
+/// Emits geofence alert events toward the Manager alert pipeline.
 /// Emission is best-effort: callers must never fail position processing on emitter errors.
 /// </summary>
 public interface IAlertEmitter

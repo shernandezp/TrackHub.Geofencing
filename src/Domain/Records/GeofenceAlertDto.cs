@@ -16,7 +16,7 @@
 namespace TrackHub.Geofencing.Domain.Records;
 
 /// <summary>
-/// Payload for a geofence alert event emitted toward the Manager alert pipeline (spec 05).
+/// Payload for a geofence alert event emitted toward the Manager alert pipeline.
 /// </summary>
 public readonly record struct GeofenceAlertDto(
     Guid GeofenceEventId,
