@@ -17,11 +17,16 @@ namespace TrackHub.Geofencing.Domain.Records;
 
 public readonly record struct GeofenceDto(
     Guid GeofenceId,
-    MultiPolygonVm Geom,
+    MultiPolygonVm? Geom,
     string Name,
     string? Description,
     short Color,
     short Type,
-    bool Active
+    bool Active,
+    CoordinateVm? CircleCenter,
+    double? CircleRadiusMeters,
+    bool AlertOnEntry,
+    bool AlertOnExit,
+    int? DwellThresholdMinutes
     );
 

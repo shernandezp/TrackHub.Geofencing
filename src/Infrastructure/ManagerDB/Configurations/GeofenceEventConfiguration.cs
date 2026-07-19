@@ -32,13 +32,17 @@ public class GeofenceEventConfiguration : IEntityTypeConfiguration<GeofenceEvent
         builder.Property(x => x.GeofenceEventId).HasColumnName("id");
         builder.Property(x => x.TransporterId).HasColumnName("transporterid");
         builder.Property(x => x.GeofenceId).HasColumnName("geofenceid");
+        builder.Property(x => x.AccountId).HasColumnName("accountid");
         builder.Property(x => x.EventDateTime).HasColumnName("datetime");
         builder.Property(x => x.DepartureTimestamp).HasColumnName("departuretimestamp");
         builder.Property(x => x.Latitude).HasColumnName("latitude");
         builder.Property(x => x.Longitude).HasColumnName("longitude");
+        builder.Property(x => x.DwellAlertedAt).HasColumnName("dwellalertedat");
         // Indexes
         builder.HasIndex(x => x.TransporterId).HasDatabaseName("ix_geofenceevent_transporterid");
         builder.HasIndex(x => x.GeofenceId).HasDatabaseName("ix_geofenceevent_geofenceid");
+        builder.HasIndex(x => new { x.AccountId, x.EventDateTime })
+            .HasDatabaseName("ix_geofenceevent_accountid_datetime");
         builder.HasIndex(x => new { x.TransporterId, x.GeofenceId, x.DepartureTimestamp })
             .HasDatabaseName("ix_geofenceevent_open_events")
             .HasFilter("departuretimestamp IS NULL");

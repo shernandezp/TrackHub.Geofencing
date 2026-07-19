@@ -16,6 +16,7 @@
 using Ardalis.GuardClauses;
 using Common.Application;
 using TrackHub.Geofencing.Infrastructure.ManagerDB;
+using TrackHub.Geofencing.Web.BackgroundServices;
 using TrackHub.Geofencing.Web.GraphQL.Mutation;
 using TrackHub.Geofencing.Web.GraphQL.Query;
 
@@ -29,8 +30,12 @@ Guard.Against.Null(allowedCORSOrigins, message: $"Allowed Origins configuration 
 // Add services to the container.
 builder.Services.AddApplicationServices();
 builder.Services.AddApplicationDbContext(builder.Configuration);
+builder.Services.AddManagerApiContext();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddWebServices();
+
+// Dwell-threshold evaluation: the module's only hosted job.
+builder.Services.AddHostedService<GeofenceDwellEvaluationService>();
 
 // Add HealthChecks
 builder.Services.AddHealthChecks()

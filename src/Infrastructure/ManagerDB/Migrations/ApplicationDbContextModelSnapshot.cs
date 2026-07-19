@@ -18,7 +18,7 @@ namespace TrackHub.Geofencing.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.9")
+                .HasAnnotation("ProductVersion", "10.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
@@ -183,6 +183,26 @@ namespace TrackHub.Geofencing.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("active");
 
+                    b.Property<bool>("AlertOnEntry")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("alertonentry");
+
+                    b.Property<bool>("AlertOnExit")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("alertonexit");
+
+                    b.Property<Point>("CircleCenter")
+                        .HasColumnType("geometry (Point, 4326)")
+                        .HasColumnName("circlecenter");
+
+                    b.Property<double?>("CircleRadiusMeters")
+                        .HasColumnType("double precision")
+                        .HasColumnName("circleradiusmeters");
+
                     b.Property<short>("Color")
                         .HasColumnType("smallint")
                         .HasColumnName("color");
@@ -197,6 +217,10 @@ namespace TrackHub.Geofencing.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)")
                         .HasColumnName("description");
+
+                    b.Property<int?>("DwellThresholdMinutes")
+                        .HasColumnType("integer")
+                        .HasColumnName("dwellthresholdminutes");
 
                     b.Property<Polygon>("Geom")
                         .IsRequired()
@@ -239,9 +263,17 @@ namespace TrackHub.Geofencing.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("accountid");
+
                     b.Property<DateTimeOffset?>("DepartureTimestamp")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("departuretimestamp");
+
+                    b.Property<DateTimeOffset?>("DwellAlertedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("dwellalertedat");
 
                     b.Property<DateTimeOffset>("EventDateTime")
                         .HasColumnType("timestamp with time zone")
@@ -270,6 +302,9 @@ namespace TrackHub.Geofencing.Infrastructure.Migrations
 
                     b.HasIndex("TransporterId")
                         .HasDatabaseName("ix_geofenceevent_transporterid");
+
+                    b.HasIndex("AccountId", "EventDateTime")
+                        .HasDatabaseName("ix_geofenceevent_accountid_datetime");
 
                     b.HasIndex("TransporterId", "GeofenceId", "DepartureTimestamp")
                         .HasDatabaseName("ix_geofenceevent_open_events")

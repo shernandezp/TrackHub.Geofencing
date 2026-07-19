@@ -18,6 +18,7 @@ namespace TrackHub.Geofencing.Domain.Records;
 public readonly record struct GeofenceEventDto(
     Guid TransporterId,
     Guid GeofenceId,
+    Guid AccountId,
     DateTimeOffset EventDateTime,
     double Latitude,
     double Longitude);

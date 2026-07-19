@@ -23,17 +23,27 @@ namespace TrackHub.Geofencing.Domain.Interfaces;
 public interface IGeofenceEventWriter
 {
     /// <summary>
-    /// Creates an entry event when a transporter enters a geofence.
+    /// Creates an entry event when a transporter enters a geofence. Returns null when a visit
+    /// with the same transporter/geofence/entry timestamp already exists (redelivered batch) —
+    /// the caller must skip counting, tracking, and alert emission for it.
     /// </summary>
-    Task<GeofenceEventVm> CreateEntryEventAsync(
+    Task<GeofenceEventVm?> CreateEntryEventAsync(
         GeofenceEventDto geofenceEvent,
         CancellationToken cancellationToken);
 
     /// <summary>
     /// Updates an event with departure information when a transporter exits a geofence.
     /// </summary>
-    Task UpdateExitEventAsync(
+    Task<GeofenceEventVm> UpdateExitEventAsync(
         Guid geofenceEventId,
         DateTimeOffset departureTimestamp,
+        CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Stamps the one-time dwell alert emission for a visit.
+    /// </summary>
+    Task StampDwellAlertedAsync(
+        Guid geofenceEventId,
+        DateTimeOffset alertedAt,
         CancellationToken cancellationToken);
 }

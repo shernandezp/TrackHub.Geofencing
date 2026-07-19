@@ -39,7 +39,7 @@ public class DeleteGeofenceCommandHandlerTests
         // Arrange
         var id = Guid.NewGuid();
         _readerMock.Setup(r => r.GetGeofenceAsync(id, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new GeofenceVm(id, _accountId, default!, "existing", null, 1, 1, true));
+            .ReturnsAsync(new GeofenceVm(id, _accountId, default!, "existing", null, 1, 1, true, null, null, false, false, null));
         _writerMock.Setup(w => w.DeleteGeofenceAsync(id, It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
         var handler = new DeleteGeofenceCommandHandler(_writerMock.Object, _readerMock.Object, _userReaderMock.Object, _userMock.Object, _featureReaderMock.Object);
@@ -58,7 +58,7 @@ public class DeleteGeofenceCommandHandlerTests
     {
         var id = Guid.NewGuid();
         _readerMock.Setup(r => r.GetGeofenceAsync(id, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new GeofenceVm(id, Guid.NewGuid(), default!, "existing", null, 1, 1, true));
+            .ReturnsAsync(new GeofenceVm(id, Guid.NewGuid(), default!, "existing", null, 1, 1, true, null, null, false, false, null));
 
         var handler = new DeleteGeofenceCommandHandler(_writerMock.Object, _readerMock.Object, _userReaderMock.Object, _userMock.Object, _featureReaderMock.Object);
 

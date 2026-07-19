@@ -26,30 +26,58 @@ public sealed class GeofenceReader(IApplicationDbContext context) : IGeofenceRea
             .Where(a => a.GeofenceId.Equals(id))
             .FirstAsync(cancellationToken);
 
-        return new GeofenceVm(geofence.GeofenceId,
-            geofence.AccountId,
-            CastGeofence(geofence.Geom),
-            geofence.Name,
-            geofence.Description,
-            geofence.Color,
-            geofence.Type,
-            geofence.Active);
+        return CastGeofence(geofence);
     }
 
-    public async Task<IReadOnlyCollection<GeofenceVm>> GetGeofencesAsync(Guid accountId, CancellationToken cancellationToken)
+    public async Task<GeofencesPageVm> GetGeofencesPageAsync(
+        Guid accountId,
+        int skip,
+        int take,
+        short? type,
+        bool? active,
+        string? search,
+        CancellationToken cancellationToken)
     {
-        var geofences = await context.Geofences
-            .Where(a => a.AccountId.Equals(accountId))
+        var query = context.Geofences
+            .Where(g => g.AccountId == accountId);
+
+        if (type is not null)
+            query = query.Where(g => g.Type == type);
+
+        if (active is not null)
+            query = query.Where(g => g.Active == active);
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            // Escape LIKE metacharacters so a literal '%'/'_' in the search text matches itself.
+            var escaped = search.Trim()
+                .Replace(@"\", @"\\")
+                .Replace("%", @"\%")
+                .Replace("_", @"\_");
+            query = query.Where(g => EF.Functions.ILike(g.Name, $"%{escaped}%", @"\"));
+        }
+
+        var totalCount = await query.CountAsync(cancellationToken);
+        var geofences = await query
+            .OrderBy(g => g.Name)
+            .ThenBy(g => g.GeofenceId)
+            .Skip(skip)
+            .Take(take)
             .ToListAsync(cancellationToken);
 
-        return [.. geofences.Select(geofence => new GeofenceVm(geofence.GeofenceId,
-            geofence.AccountId,
-            CastGeofence(geofence.Geom),
-            geofence.Name,
-            geofence.Description,
-            geofence.Color,
-            geofence.Type,
-            geofence.Active))];
+        return new GeofencesPageVm([.. geofences.Select(CastGeofence)], totalCount);
+    }
+
+    public async Task<IReadOnlyDictionary<Guid, GeofenceAlertInfoVm>> GetActiveGeofenceAlertInfoAsync(
+        Guid accountId,
+        CancellationToken cancellationToken)
+    {
+        var infos = await context.Geofences
+            .Where(g => g.AccountId == accountId && g.Active)
+            .Select(g => new GeofenceAlertInfoVm(g.GeofenceId, g.Name, g.Type, g.AlertOnEntry, g.AlertOnExit))
+            .ToListAsync(cancellationToken);
+
+        return infos.ToDictionary(i => i.GeofenceId);
     }
 
     public async Task<IReadOnlyCollection<Guid>> GetGeofenceIdsContainingPointAsync(
@@ -72,6 +100,21 @@ public sealed class GeofenceReader(IApplicationDbContext context) : IGeofenceRea
         return geofenceIds;
     }
 
+    private static GeofenceVm CastGeofence(Entities.Geofence geofence)
+        => new(geofence.GeofenceId,
+            geofence.AccountId,
+            CastGeofence(geofence.Geom),
+            geofence.Name,
+            geofence.Description,
+            geofence.Color,
+            geofence.Type,
+            geofence.Active,
+            geofence.CircleCenter is null ? null : new CoordinateVm(geofence.CircleCenter.Y, geofence.CircleCenter.X),
+            geofence.CircleRadiusMeters,
+            geofence.AlertOnEntry,
+            geofence.AlertOnExit,
+            geofence.DwellThresholdMinutes);
+
     private static MultiPolygonVm CastGeofence(Polygon polygon)
     {
         var points = new List<CoordinateVm>();
@@ -82,4 +125,3 @@ public sealed class GeofenceReader(IApplicationDbContext context) : IGeofenceRea
         return new MultiPolygonVm(points, 4326);
     }
 }
-

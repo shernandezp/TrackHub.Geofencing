@@ -37,7 +37,7 @@ public class GetGeofenceQueryHandlerTests
     {
         // Arrange
         var id = Guid.NewGuid();
-        var vm = new GeofenceVm(id, _accountId, new MultiPolygonVm([], 4326), "name", null, 1, 1, true);
+        var vm = new GeofenceVm(id, _accountId, new MultiPolygonVm([], 4326), "name", null, 1, 1, true, null, null, false, false, null);
         _readerMock.Setup(r => r.GetGeofenceAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(vm);
 
         var handler = new GetGeofenceQueryHandler(_readerMock.Object, _userReaderMock.Object, _userMock.Object, _featureReaderMock.Object);
@@ -58,7 +58,7 @@ public class GetGeofenceQueryHandlerTests
         // Arrange
         var id = Guid.NewGuid();
         var differentAccountId = Guid.NewGuid();
-        var vm = new GeofenceVm(id, differentAccountId, new MultiPolygonVm([], 4326), "name", null, 1, 1, true);
+        var vm = new GeofenceVm(id, differentAccountId, new MultiPolygonVm([], 4326), "name", null, 1, 1, true, null, null, false, false, null);
         _readerMock.Setup(r => r.GetGeofenceAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(vm);
 
         var handler = new GetGeofenceQueryHandler(_readerMock.Object, _userReaderMock.Object, _userMock.Object, _featureReaderMock.Object);

@@ -51,7 +51,7 @@ public static class DependencyInjection
         services.AddScoped<ITransportersInGeofence, TransportersInGeofence>();
         services.AddScoped<IAccountFeatureReader, AccountFeatureReader>();
 
-        // Cross-service account-status enforcement (spec 03 §7.4).
+        // Cross-service account-status enforcement.
         services.AddMemoryCache();
         services.AddScoped<Common.Application.Interfaces.IAccountOperationalStatusReader, AccountOperationalStatusReader>();
         services.AddScoped<Common.Application.Interfaces.IAccountOperationalStatusService, Common.Application.Services.CachedAccountOperationalStatusService>();

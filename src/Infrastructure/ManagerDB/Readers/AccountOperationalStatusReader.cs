@@ -18,7 +18,7 @@ using Common.Domain.Enums;
 
 namespace TrackHub.Geofencing.Infrastructure.Readers;
 
-// Reads Manager account status directly over the shared database (spec 03 §7.4). Backs the cached
+// Reads Manager account status directly over the shared database. Backs the cached
 // IAccountOperationalStatusService that AccountStatusBehavior consumes to fail-close suspended accounts.
 public sealed class AccountOperationalStatusReader(IApplicationDbContext context) : IAccountOperationalStatusReader
 {

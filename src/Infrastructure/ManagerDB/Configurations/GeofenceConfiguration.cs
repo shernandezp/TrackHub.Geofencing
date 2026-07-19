@@ -35,6 +35,13 @@ public class GeofenceConfiguration : IEntityTypeConfiguration<Geofence>
         builder.Property(x => x.Color).HasColumnName("color");
         builder.Property(x => x.Type).HasColumnName("type");
         builder.Property(x => x.Active).HasColumnName("active");
+        builder.Property(e => e.CircleCenter)
+            .HasColumnName("circlecenter")
+            .HasColumnType("geometry (Point, 4326)");
+        builder.Property(x => x.CircleRadiusMeters).HasColumnName("circleradiusmeters");
+        builder.Property(x => x.AlertOnEntry).HasColumnName("alertonentry").HasDefaultValue(false);
+        builder.Property(x => x.AlertOnExit).HasColumnName("alertonexit").HasDefaultValue(false);
+        builder.Property(x => x.DwellThresholdMinutes).HasColumnName("dwellthresholdminutes");
 
         builder.Property(t => t.Name)
             .HasMaxLength(ColumnMetadata.DefaultNameLength)

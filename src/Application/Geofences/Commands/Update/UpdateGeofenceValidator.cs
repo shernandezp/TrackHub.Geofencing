@@ -13,6 +13,7 @@
 //  limitations under the License.
 //
 
+using TrackHub.Geofencing.Application.Geofences.Commands;
 using TrackHub.Geofencing.Application.Geofences.Commands.Update;
 
 namespace TrackHub.Geofencing.Application.Transporters.Commands.Update;
@@ -22,19 +23,10 @@ public sealed class UpdateGeofenceValidator : AbstractValidator<UpdateGeofenceCo
     public UpdateGeofenceValidator()
     {
         RuleFor(v => v.Geofence)
-            .NotEmpty();
+            .NotEmpty()
+            .SetValidator(new GeofenceDtoValidator());
 
         RuleFor(v => v.Geofence.GeofenceId)
             .NotEmpty();
-
-        RuleFor(v => v.Geofence.Name)
-            .NotEmpty();
-
-        RuleFor(v => v.Geofence.Geom)
-            .NotEmpty();
-
-        RuleFor(v => v.Geofence.Geom.Coordinates)
-            .NotEmpty();
     }
 }
-

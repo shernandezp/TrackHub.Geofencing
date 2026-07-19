@@ -28,6 +28,17 @@ public class Geofence(Guid geofenceId, Polygon geom, Guid accountId, string name
     public short Color { get; set; } = color;
     public short Type { get; set; } = type;
     public bool Active { get; set; } = active;
-
+    /// <summary>
+    /// Circle metadata (center + radius); when set, <see cref="Geom"/> holds the buffered polygon
+    /// so detection, indexes, and consumers work unchanged. Both null = hand-drawn polygon.
+    /// </summary>
+    public Point? CircleCenter { get; set; }
+    public double? CircleRadiusMeters { get; set; }
+    public bool AlertOnEntry { get; set; }
+    public bool AlertOnExit { get; set; }
+    /// <summary>
+    /// Dwell alert threshold in minutes; null = no dwell alert for this geofence.
+    /// </summary>
+    public int? DwellThresholdMinutes { get; set; }
 }
 

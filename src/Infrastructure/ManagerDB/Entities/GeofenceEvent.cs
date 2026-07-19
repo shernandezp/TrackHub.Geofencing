@@ -21,6 +21,7 @@ namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Entities;
 public class GeofenceEvent(
     Guid transporterId,
     Guid geofenceId,
+    Guid accountId,
     DateTimeOffset eventDateTime,
     double latitude,
     double longitude)
@@ -28,6 +29,7 @@ public class GeofenceEvent(
     public Guid GeofenceEventId { get; private set; } = Guid.NewGuid();
     public Guid TransporterId { get; set; } = transporterId;
     public Guid GeofenceId { get; set; } = geofenceId;
+    public Guid AccountId { get; set; } = accountId;
     public DateTimeOffset EventDateTime { get; set; } = eventDateTime;
     /// <summary>
     /// Exit timestamp (null if still inside geofence).
@@ -38,6 +40,10 @@ public class GeofenceEvent(
     /// </summary>
     public double Latitude { get; set; } = latitude;
     public double Longitude { get; set; } = longitude;
+    /// <summary>
+    /// One-time dwell alert emission stamp for this visit (null = not alerted).
+    /// </summary>
+    public DateTimeOffset? DwellAlertedAt { get; set; }
     // Navigation properties
     public Geofence? Geofence { get; set; }
 }

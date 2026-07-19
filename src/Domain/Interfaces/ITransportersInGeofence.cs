@@ -17,6 +17,6 @@ namespace TrackHub.Geofencing.Domain.Interfaces;
 
 public interface ITransportersInGeofence
 {
-    Task<IReadOnlyCollection<TransporterInGeofenceVm>> GetTransportersInGeofencesAsync(Guid accountId, Guid userId, CancellationToken cancellationToken);
+    Task<IReadOnlyCollection<TransporterInGeofenceVm>> GetTransportersInGeofencesAsync(Guid accountId, Guid userId, Guid? geofenceId, short? type, CancellationToken cancellationToken);
 }
 
