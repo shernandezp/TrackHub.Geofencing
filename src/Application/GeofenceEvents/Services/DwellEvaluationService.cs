@@ -31,7 +31,7 @@ public class DwellEvaluationService(
     IBackgroundJobRunRecorder jobRunRecorder,
     ILogger<DwellEvaluationService> logger) : IDwellEvaluationService
 {
-    public const string JobKey = "geofence-dwell-evaluation";
+    public const string JobKey = BackgroundJobKeys.GeofenceDwellEvaluation;
 
     public async Task<int> EvaluateDwellAsync(CancellationToken cancellationToken)
     {
