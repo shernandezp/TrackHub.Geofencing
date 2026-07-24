@@ -17,7 +17,7 @@ using System.Text.Json;
 using Common.Application.Interfaces;
 using NetTopologySuite.Geometries;
 
-namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Writers;
+namespace TrackHub.Geofencing.Infrastructure.Writers;
 
 public sealed class GeofenceWriter(IApplicationDbContext context, IUser user) : IGeofenceWriter
 {

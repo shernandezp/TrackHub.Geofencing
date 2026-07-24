@@ -18,6 +18,7 @@ using Common.Application.Interfaces;
 namespace TrackHub.Geofencing.Application.TransportersInGeofence.Queries.Get;
 
 [Authorize(Resource = Resources.Geofencing, Action = Actions.Read)]
+[AccountScopeEnforcedInHandler]
 public readonly record struct GetTransportersInGeofenceQuery(
     Guid? GeofenceId,
     short? Type) : IRequest<IReadOnlyCollection<TransporterInGeofenceVm>>;

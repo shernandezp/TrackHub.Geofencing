@@ -18,6 +18,7 @@ using Common.Application.Interfaces;
 namespace TrackHub.Geofencing.Application.GeofenceEvents.Queries.Get;
 
 [Authorize(Resource = Resources.Geofencing, Action = Actions.Read)]
+[AccountScopeEnforcedInHandler]
 public readonly record struct GetGeofenceEventsQuery(
     DateTimeOffset From,
     DateTimeOffset To,

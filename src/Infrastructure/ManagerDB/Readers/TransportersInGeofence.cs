@@ -13,7 +13,7 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Readers;
+namespace TrackHub.Geofencing.Infrastructure.Readers;
 
 public sealed class TransportersInGeofence(IApplicationDbContext context) : ITransportersInGeofence
 {

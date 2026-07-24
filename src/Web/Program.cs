@@ -15,7 +15,7 @@
 
 using Ardalis.GuardClauses;
 using Common.Application;
-using TrackHub.Geofencing.Infrastructure.ManagerDB;
+using TrackHub.Geofencing.Infrastructure;
 using TrackHub.Geofencing.Web.BackgroundServices;
 using TrackHub.Geofencing.Web.GraphQL.Mutation;
 using TrackHub.Geofencing.Web.GraphQL.Query;

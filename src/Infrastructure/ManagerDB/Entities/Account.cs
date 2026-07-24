@@ -13,7 +13,7 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Entities;
+namespace TrackHub.Geofencing.Infrastructure.Entities;
 
 // Read-only scoping entity: Geofencing maps a minimal projection of the Manager-owned app.accounts
 // table for cross-service account-status enforcement. It never writes it.

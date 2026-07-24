@@ -18,6 +18,7 @@ using Common.Application.Interfaces;
 namespace TrackHub.Geofencing.Application.Geofences.Queries.Get;
 
 [Authorize(Resource = Resources.Geofences, Action = Actions.Read)]
+[AccountScopeEnforcedInHandler]
 public readonly record struct GetGeofenceQuery(Guid Id) : IRequest<GeofenceVm>;
 
 public class GetGeofenceQueryHandler(IGeofenceReader reader, IUserReader userReader, IUser user, IAccountFeatureReader accountFeatureReader) : IRequestHandler<GetGeofenceQuery, GeofenceVm>

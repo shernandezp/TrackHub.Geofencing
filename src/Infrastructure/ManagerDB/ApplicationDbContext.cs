@@ -16,7 +16,7 @@
 using System.Reflection;
 using Common.Infrastructure;
 
-namespace TrackHub.Geofencing.Infrastructure.ManagerDB;
+namespace TrackHub.Geofencing.Infrastructure;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options), IApplicationDbContext
 {

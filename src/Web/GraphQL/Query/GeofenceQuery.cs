@@ -20,11 +20,11 @@ namespace TrackHub.Geofencing.Web.GraphQL.Query;
 
 public partial class Query
 {
-    public async Task<GeofenceVm> GetGeofence([Service] ISender sender, [AsParameters] GetGeofenceQuery query)
-        => await sender.Send(query);
+    public async Task<GeofenceVm> GetGeofence([Service] ISender sender, [AsParameters] GetGeofenceQuery query, CancellationToken cancellationToken)
+        => await sender.Send(query, cancellationToken);
 
-    public async Task<GeofencesPageVm> GetGeofencesByAccount([Service] ISender sender, [AsParameters] GetGeofencesByAccountQuery query)
-        => await sender.Send(query);
+    public async Task<GeofencesPageVm> GetGeofencesByAccount([Service] ISender sender, [AsParameters] GetGeofencesByAccountQuery query, CancellationToken cancellationToken)
+        => await sender.Send(query, cancellationToken);
 
 }
 

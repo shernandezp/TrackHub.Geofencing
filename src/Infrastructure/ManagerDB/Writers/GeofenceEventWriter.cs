@@ -13,7 +13,7 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Writers;
+namespace TrackHub.Geofencing.Infrastructure.Writers;
 
 public sealed class GeofenceEventWriter(IApplicationDbContext context) : IGeofenceEventWriter
 {

@@ -18,6 +18,7 @@ using Common.Application.Interfaces;
 namespace TrackHub.Geofencing.Application.Geofences.Commands.Delete;
 
 [Authorize(Resource = Resources.Geofences, Action = Actions.Delete)]
+[AccountScopeEnforcedInHandler]
 public record DeleteGeofenceCommand(Guid Id) : IRequest;
 
 public class DeleteGeofenceCommandHandler(IGeofenceWriter writer, IGeofenceReader reader, IUserReader userReader, IUser user, IAccountFeatureReader accountFeatureReader) : IRequestHandler<DeleteGeofenceCommand>

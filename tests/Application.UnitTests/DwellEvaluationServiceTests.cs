@@ -103,6 +103,110 @@ public class DwellEvaluationServiceTests
             It.IsAny<DateTimeOffset>(), It.IsAny<DateTimeOffset?>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
+    // ----- DwellThresholdMinutes: both sides of the boundary -------------------------------------
+    //
+    // The guard is `EventDateTime + threshold > now -> skip`, so the threshold is inclusive: a visit
+    // whose elapsed time has just reached it alerts. Cases two hours away from the line pass even
+    // with the comparison deleted; these sit one minute either side of it.
+
+    [Test]
+    public async Task EvaluateDwellAsync_OneMinuteShortOfTheThreshold_DoesNotEmit()
+    {
+        // Arrange
+        var candidate = Candidate(DateTimeOffset.UtcNow.AddMinutes(-59), thresholdMinutes: 60);
+        _geofenceEventReaderMock.Setup(r => r.GetDwellAlertCandidatesAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync([candidate]);
+
+        // Act
+        var alerted = await CreateService().EvaluateDwellAsync(CancellationToken.None);
+
+        // Assert
+        Assert.That(alerted, Is.Zero);
+        _alertEmitterMock.Verify(e => e.EmitGeofenceDwellExceededAsync(
+            It.IsAny<GeofenceAlertDto>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Test]
+    public async Task EvaluateDwellAsync_ExactlyAtTheThreshold_Emits()
+    {
+        // Arrange
+        var candidate = Candidate(DateTimeOffset.UtcNow.AddMinutes(-60), thresholdMinutes: 60);
+        _geofenceEventReaderMock.Setup(r => r.GetDwellAlertCandidatesAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync([candidate]);
+
+        // Act
+        var alerted = await CreateService().EvaluateDwellAsync(CancellationToken.None);
+
+        // Assert
+        Assert.That(alerted, Is.EqualTo(1));
+        _alertEmitterMock.Verify(e => e.EmitGeofenceDwellExceededAsync(
+            It.IsAny<GeofenceAlertDto>(), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Test]
+    public async Task EvaluateDwellAsync_OneMinutePastTheThreshold_Emits()
+    {
+        // Arrange
+        var candidate = Candidate(DateTimeOffset.UtcNow.AddMinutes(-61), thresholdMinutes: 60);
+        _geofenceEventReaderMock.Setup(r => r.GetDwellAlertCandidatesAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync([candidate]);
+
+        // Act
+        var alerted = await CreateService().EvaluateDwellAsync(CancellationToken.None);
+
+        // Assert
+        Assert.That(alerted, Is.EqualTo(1));
+    }
+
+    [Test]
+    public async Task EvaluateDwellAsync_HonoursEachCandidatesOwnThreshold_WhenItIsWider()
+    {
+        // Two hours parked against a four-hour tolerance is not an alert. Against the 60 minutes
+        // every other test uses it would be, so a service that ignores DwellThresholdMinutes - or
+        // hard-codes one - fails here.
+        var candidate = Candidate(DateTimeOffset.UtcNow.AddMinutes(-120), thresholdMinutes: 240);
+        _geofenceEventReaderMock.Setup(r => r.GetDwellAlertCandidatesAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync([candidate]);
+
+        var alerted = await CreateService().EvaluateDwellAsync(CancellationToken.None);
+
+        Assert.That(alerted, Is.Zero);
+        _alertEmitterMock.Verify(e => e.EmitGeofenceDwellExceededAsync(
+            It.IsAny<GeofenceAlertDto>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Test]
+    public async Task EvaluateDwellAsync_HonoursEachCandidatesOwnThreshold_WhenItIsTighter()
+    {
+        // Five minutes parked against a five-minute tolerance alerts, though 60 minutes would not.
+        var candidate = Candidate(DateTimeOffset.UtcNow.AddMinutes(-5), thresholdMinutes: 5);
+        _geofenceEventReaderMock.Setup(r => r.GetDwellAlertCandidatesAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync([candidate]);
+
+        var alerted = await CreateService().EvaluateDwellAsync(CancellationToken.None);
+
+        Assert.That(alerted, Is.EqualTo(1));
+    }
+
+    [Test]
+    public async Task EvaluateDwellAsync_EvaluatesEachCandidateAgainstItsOwnThreshold()
+    {
+        // A mixed batch: only the candidate whose own elapsed time reaches its own threshold may
+        // alert. A single shared comparison would let both through or hold both back.
+        var due = Candidate(DateTimeOffset.UtcNow.AddMinutes(-30), thresholdMinutes: 20);
+        var notDue = Candidate(DateTimeOffset.UtcNow.AddMinutes(-30), thresholdMinutes: 45);
+        _geofenceEventReaderMock.Setup(r => r.GetDwellAlertCandidatesAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync([due, notDue]);
+
+        var alerted = await CreateService().EvaluateDwellAsync(CancellationToken.None);
+
+        Assert.That(alerted, Is.EqualTo(1));
+        _alertEmitterMock.Verify(e => e.EmitGeofenceDwellExceededAsync(
+            It.Is<GeofenceAlertDto>(a => a.GeofenceEventId == due.GeofenceEventId), It.IsAny<CancellationToken>()), Times.Once);
+        _alertEmitterMock.Verify(e => e.EmitGeofenceDwellExceededAsync(
+            It.Is<GeofenceAlertDto>(a => a.GeofenceEventId == notDue.GeofenceEventId), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
     [Test]
     public async Task EvaluateDwellAsync_EmitterThrows_DoesNotStamp_ReturnsZero_NoRun()
     {

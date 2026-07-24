@@ -18,6 +18,11 @@ using Common.Application.Interfaces;
 namespace TrackHub.Geofencing.Application.Geofences.Commands.Create;
 
 [Authorize(Resource = Resources.Geofences, Action = Actions.Write)]
+// Caller-bound create: the handler resolves the caller's own account and the writer binds the new
+// row to it (GeofenceWriter.CreateGeofenceAsync ignores any other tenant signal). The DTO's
+// GeofenceId is the client-generated identity of the NEW row, not a reference — the INSERT cannot
+// reach an existing geofence (a colliding id fails on the primary key).
+[AccountScopeEnforcedInHandler]
 public readonly record struct CreateGeofenceCommand(GeofenceDto Geofence) : IRequest<GeofenceVm>;
 
 public class CreateGeofenceCommandHandler(IGeofenceWriter writer, IUserReader userReader, IUser user, IAccountFeatureReader accountFeatureReader) : IRequestHandler<CreateGeofenceCommand, GeofenceVm>

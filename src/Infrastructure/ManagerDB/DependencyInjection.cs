@@ -16,7 +16,7 @@
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
-using TrackHub.Geofencing.Infrastructure.ManagerDB;
+using TrackHub.Geofencing.Infrastructure;
 using TrackHub.Geofencing.Infrastructure.Readers;
 
 namespace Microsoft.Extensions.DependencyInjection;

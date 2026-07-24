@@ -6,14 +6,14 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using TrackHub.Geofencing.Infrastructure.ManagerDB;
+using TrackHub.Geofencing.Infrastructure;
 
 #nullable disable
 
 namespace TrackHub.Geofencing.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260720012156_InitialCreate")]
+    [Migration("20260722151526_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -27,7 +27,7 @@ namespace TrackHub.Geofencing.Infrastructure.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("TrackHub.Geofencing.Infrastructure.ManagerDB.Entities.Account", b =>
+            modelBuilder.Entity("TrackHub.Geofencing.Infrastructure.Entities.Account", b =>
                 {
                     b.Property<Guid>("AccountId")
                         .ValueGeneratedOnAdd()
@@ -46,7 +46,7 @@ namespace TrackHub.Geofencing.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TrackHub.Geofencing.Infrastructure.ManagerDB.Entities.AccountFeature", b =>
+            modelBuilder.Entity("TrackHub.Geofencing.Infrastructure.Entities.AccountFeature", b =>
                 {
                     b.Property<Guid>("AccountFeatureId")
                         .ValueGeneratedOnAdd()
@@ -84,7 +84,7 @@ namespace TrackHub.Geofencing.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TrackHub.Geofencing.Infrastructure.ManagerDB.Entities.AuditEvent", b =>
+            modelBuilder.Entity("TrackHub.Geofencing.Infrastructure.Entities.AuditEvent", b =>
                 {
                     b.Property<Guid>("AuditEventId")
                         .ValueGeneratedOnAdd()
@@ -171,7 +171,7 @@ namespace TrackHub.Geofencing.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TrackHub.Geofencing.Infrastructure.ManagerDB.Entities.Geofence", b =>
+            modelBuilder.Entity("TrackHub.Geofencing.Infrastructure.Entities.Geofence", b =>
                 {
                     b.Property<Guid>("GeofenceId")
                         .ValueGeneratedOnAdd()
@@ -244,7 +244,8 @@ namespace TrackHub.Geofencing.Infrastructure.Migrations
 
                     b.Property<short>("Type")
                         .HasColumnType("smallint")
-                        .HasColumnName("type");
+                        .HasColumnName("type")
+                        .HasComment("Category of the geofence. Values: 1=ClientLocation, 2=ConstructionSite, 3=DangerZone, 4=FuelStation, 5=Garage, 6=Hospital, 7=Hotel, 8=Office, 9=Park, 10=ParkingLot, 11=RestrictedArea, 12=RetailStore, 13=School, 14=Warehouse.");
 
                     b.HasKey("GeofenceId");
 
@@ -256,10 +257,13 @@ namespace TrackHub.Geofencing.Infrastructure.Migrations
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Geom"), "gist");
 
-                    b.ToTable("geofences", "geofencing");
+                    b.ToTable("geofences", "geofencing", t =>
+                        {
+                            t.HasCheckConstraint("ck_geofences_type", "type in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)");
+                        });
                 });
 
-            modelBuilder.Entity("TrackHub.Geofencing.Infrastructure.ManagerDB.Entities.GeofenceEvent", b =>
+            modelBuilder.Entity("TrackHub.Geofencing.Infrastructure.Entities.GeofenceEvent", b =>
                 {
                     b.Property<Guid>("GeofenceEventId")
                         .ValueGeneratedOnAdd()
@@ -316,7 +320,7 @@ namespace TrackHub.Geofencing.Infrastructure.Migrations
                     b.ToTable("geofenceevents", "geofencing");
                 });
 
-            modelBuilder.Entity("TrackHub.Geofencing.Infrastructure.ManagerDB.Entities.VwTransporterPosition", b =>
+            modelBuilder.Entity("TrackHub.Geofencing.Infrastructure.Entities.VwTransporterPosition", b =>
                 {
                     b.Property<Guid>("TransporterId")
                         .HasColumnType("uuid")
@@ -343,7 +347,7 @@ namespace TrackHub.Geofencing.Infrastructure.Migrations
                     b.ToView("vw_transporter_position", "geofencing");
                 });
 
-            modelBuilder.Entity("TrackHub.Geofencing.Infrastructure.ManagerDB.Entities.VwUser", b =>
+            modelBuilder.Entity("TrackHub.Geofencing.Infrastructure.Entities.VwUser", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid")
@@ -365,9 +369,9 @@ namespace TrackHub.Geofencing.Infrastructure.Migrations
                     b.ToView("vw_users", "geofencing");
                 });
 
-            modelBuilder.Entity("TrackHub.Geofencing.Infrastructure.ManagerDB.Entities.GeofenceEvent", b =>
+            modelBuilder.Entity("TrackHub.Geofencing.Infrastructure.Entities.GeofenceEvent", b =>
                 {
-                    b.HasOne("TrackHub.Geofencing.Infrastructure.ManagerDB.Entities.Geofence", "Geofence")
+                    b.HasOne("TrackHub.Geofencing.Infrastructure.Entities.Geofence", "Geofence")
                         .WithMany()
                         .HasForeignKey("GeofenceId")
                         .OnDelete(DeleteBehavior.Restrict)

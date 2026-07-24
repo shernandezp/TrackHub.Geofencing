@@ -15,11 +15,11 @@
 
 global using TrackHub.Geofencing.Domain.Interfaces;
 global using TrackHub.Geofencing.Domain.Records;
-global using TrackHub.Geofencing.Infrastructure.ManagerDB.Interfaces;
+global using TrackHub.Geofencing.Infrastructure.Interfaces;
 global using Ardalis.GuardClauses;
 global using Microsoft.EntityFrameworkCore;
-global using TrackHub.Geofencing.Infrastructure.ManagerDB.Entities;
+global using TrackHub.Geofencing.Infrastructure.Entities;
 global using TrackHub.Geofencing.Domain.Models;
-global using TrackHub.Geofencing.Infrastructure.ManagerDB.Readers;
-global using TrackHub.Geofencing.Infrastructure.ManagerDB.Writers;
+global using TrackHub.Geofencing.Infrastructure.Readers;
+global using TrackHub.Geofencing.Infrastructure.Writers;
 

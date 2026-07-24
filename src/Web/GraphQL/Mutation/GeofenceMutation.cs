@@ -21,19 +21,19 @@ namespace TrackHub.Geofencing.Web.GraphQL.Mutation;
 
 public partial class Mutation
 {
-    public async Task<GeofenceVm> CreateGeofence([Service] ISender sender, CreateGeofenceCommand command)
-        => await sender.Send(command);
+    public async Task<GeofenceVm> CreateGeofence([Service] ISender sender, CreateGeofenceCommand command, CancellationToken cancellationToken)
+        => await sender.Send(command, cancellationToken);
 
-    public async Task<bool> UpdateGeofence([Service] ISender sender, Guid id, UpdateGeofenceCommand command)
+    public async Task<bool> UpdateGeofence([Service] ISender sender, Guid id, UpdateGeofenceCommand command, CancellationToken cancellationToken)
     {
         if (id != command.Geofence.GeofenceId) return false;
-        await sender.Send(command);
+        await sender.Send(command, cancellationToken);
         return true;
     }
 
-    public async Task<Guid> DeleteGeofence([Service] ISender sender, Guid id)
+    public async Task<Guid> DeleteGeofence([Service] ISender sender, Guid id, CancellationToken cancellationToken)
     {
-        await sender.Send(new DeleteGeofenceCommand(id));
+        await sender.Send(new DeleteGeofenceCommand(id), cancellationToken);
         return id;
     }
 }

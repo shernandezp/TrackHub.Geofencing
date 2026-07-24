@@ -16,7 +16,7 @@
 using Common.Domain.Constants;
 using Common.Domain.Enums;
 
-namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Readers;
+namespace TrackHub.Geofencing.Infrastructure.Readers;
 
 public sealed class GeofenceEventReader(IApplicationDbContext context) : IGeofenceEventReader
 {

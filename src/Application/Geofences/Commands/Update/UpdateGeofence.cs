@@ -18,6 +18,7 @@ using Common.Application.Interfaces;
 namespace TrackHub.Geofencing.Application.Geofences.Commands.Update;
 
 [Authorize(Resource = Resources.Geofences, Action = Actions.Edit)]
+[AccountScopeEnforcedInHandler]
 public readonly record struct UpdateGeofenceCommand(GeofenceDto Geofence) : IRequest;
 
 public class UpdateGeofenceCommandHandler(IGeofenceWriter writer, IGeofenceReader reader, IUserReader userReader, IUser user, IAccountFeatureReader accountFeatureReader) : IRequestHandler<UpdateGeofenceCommand>

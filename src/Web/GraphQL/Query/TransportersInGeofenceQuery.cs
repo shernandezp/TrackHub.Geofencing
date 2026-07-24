@@ -25,8 +25,9 @@ public partial class Query
     public async Task<IReadOnlyCollection<TransporterInGeofenceVm>> GetTransportersInGeofence(
         [Service] ISender sender,
         Guid? geofenceId = null,
-        short? type = null)
-        => await sender.Send(new GetTransportersInGeofenceQuery(geofenceId, type));
+        short? type = null,
+        CancellationToken cancellationToken = default)
+        => await sender.Send(new GetTransportersInGeofenceQuery(geofenceId, type), cancellationToken);
 
 }
 

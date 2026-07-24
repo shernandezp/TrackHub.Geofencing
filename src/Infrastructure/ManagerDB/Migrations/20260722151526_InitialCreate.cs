@@ -30,7 +30,7 @@ namespace TrackHub.Geofencing.Infrastructure.Migrations
                     name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     color = table.Column<short>(type: "smallint", nullable: false),
-                    type = table.Column<short>(type: "smallint", nullable: false),
+                    type = table.Column<short>(type: "smallint", nullable: false, comment: "Category of the geofence. Values: 1=ClientLocation, 2=ConstructionSite, 3=DangerZone, 4=FuelStation, 5=Garage, 6=Hospital, 7=Hotel, 8=Office, 9=Park, 10=ParkingLot, 11=RestrictedArea, 12=RetailStore, 13=School, 14=Warehouse."),
                     active = table.Column<bool>(type: "boolean", nullable: false),
                     circlecenter = table.Column<Point>(type: "geometry (Point, 4326)", nullable: true),
                     circleradiusmeters = table.Column<double>(type: "double precision", nullable: true),
@@ -45,6 +45,7 @@ namespace TrackHub.Geofencing.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_geofences", x => x.id);
+                    table.CheckConstraint("ck_geofences_type", "type in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)");
                 });
 
             migrationBuilder.CreateTable(

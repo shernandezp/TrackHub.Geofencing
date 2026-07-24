@@ -13,7 +13,7 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Interfaces;
+namespace TrackHub.Geofencing.Infrastructure.Interfaces;
 
 public interface IApplicationDbContext
 {

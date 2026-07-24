@@ -16,7 +16,7 @@
 using Common.Domain.Constants;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Configurations;
+namespace TrackHub.Geofencing.Infrastructure.Configurations;
 
 public class AuditEventConfiguration : IEntityTypeConfiguration<AuditEvent>
 {

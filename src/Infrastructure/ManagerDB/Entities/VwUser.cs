@@ -13,7 +13,7 @@
 //  limitations under the License.
 //
 
-namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Entities;
+namespace TrackHub.Geofencing.Infrastructure.Entities;
 
 public class VwUser(
     Guid userId,

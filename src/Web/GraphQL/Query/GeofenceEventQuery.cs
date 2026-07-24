@@ -22,7 +22,8 @@ public partial class Query
 
     public async Task<GeofenceEventsPageVm> GetGeofenceEvents(
         [Service] ISender sender,
-        [AsParameters] GetGeofenceEventsQuery query)
-        => await sender.Send(query);
+        [AsParameters] GetGeofenceEventsQuery query,
+        CancellationToken cancellationToken)
+        => await sender.Send(query, cancellationToken);
 
 }

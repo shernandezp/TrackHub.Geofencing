@@ -14,15 +14,21 @@
 //
 
 using Common.Domain.Constants;
+using Common.Domain.Enums;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace TrackHub.Geofencing.Infrastructure.ManagerDB.Configurations;
+namespace TrackHub.Geofencing.Infrastructure.Configurations;
 public class GeofenceConfiguration : IEntityTypeConfiguration<Geofence>
 {
     public void Configure(EntityTypeBuilder<Geofence> builder)
     {
         //Table name
-        builder.ToTable(name: TableMetadata.Geofence, schema: SchemaMetadata.Geofencing);
+        builder.ToTable(
+            name: TableMetadata.Geofence,
+            schema: SchemaMetadata.Geofencing,
+            t => t.HasCheckConstraint(
+                "ck_geofences_type",
+                EnumColumn.Check<GeofenceType>("type")));
 
         //Column names
         builder.Property(x => x.GeofenceId).HasColumnName("id");
@@ -33,7 +39,8 @@ public class GeofenceConfiguration : IEntityTypeConfiguration<Geofence>
         builder.Property(x => x.Name).HasColumnName("name");
         builder.Property(x => x.Description).HasColumnName("description");
         builder.Property(x => x.Color).HasColumnName("color");
-        builder.Property(x => x.Type).HasColumnName("type");
+        builder.Property(x => x.Type).HasColumnName("type")
+            .HasComment(EnumColumn.Comment<GeofenceType>("Category of the geofence."));
         builder.Property(x => x.Active).HasColumnName("active");
         builder.Property(e => e.CircleCenter)
             .HasColumnName("circlecenter")
